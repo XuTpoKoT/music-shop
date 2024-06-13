@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Music Shop Online</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/main.css}" />
+</head>
+
+<body>
+    <th:block th:include="_header"></th:block>
+    <th:block th:include="_menu"></th:block>
+
+    <div class="product-preview-container" th:each="product : ${paginationProducts.getContent()}">
+        <ul>
+            <li><img class="product-image"
+                     th:src="${product.getImgRef()}" /></li>
+            <li>
+                <a th:href="@{/v1/products/{id}(id=${product.getId()})}" th:utext="${product.getName()}"></a>
+            </li>
+            <li><span th:utext="${product.getPrice()}"></span></li>
+        </ul>
+    </div>
+    <br/>
+
+    <nav id="navigationPanel" style="display:inline" th:if="${paginationProducts.getTotalPages() > 1}">
+        <script th:inline="javascript">
+            const totalPages = /*[[${paginationProducts.totalPages}]]*/ 1;
+            const currentPage = /*[[${paginationProducts.number}]]*/ 2;
+            console.log('More than one page available: ' + totalPages);
+            const navigationPanel = document.getElementById('navigationPanel');
+            for (let pageNumber = 1; pageNumber <= totalPages; pageNumber++) {
+                const anchor = document.createElement('a');
+                const url = '/v1/products?pageNumber=' + pageNumber;
+                console.log(url);
+                anchor.setAttribute('href', url);
+                anchor.className = "nav-item";
+                if (pageNumber === currentPage) {
+                    anchor.style.color = 'blueviolet';
+                }
+                anchor.textContent = pageNumber + ' ';
+                navigationPanel.appendChild(anchor);
+            }
+        </script>
+    </nav>
+
+</body>
+</html>
