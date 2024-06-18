@@ -14,4 +14,11 @@ public class ExceptionHandlerController {
         model.addAttribute("error", "Unknown error");
         return "error";
     }
+
+    @ExceptionHandler(value = {ProductNotFoundException.class})
+    public String productNotFound(ProductNotFoundException ex, Model model) {
+        log.info(ex.getMessage());
+        model.addAttribute("error", ex.getMessage());
+        return "error";
+    }
 }

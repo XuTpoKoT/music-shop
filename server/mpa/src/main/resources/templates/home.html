@@ -13,11 +13,11 @@
     <div class="product-preview-container" th:each="product : ${paginationProducts.getContent()}">
         <ul>
             <li><img class="product-image"
-                     th:src="${product.getImgRef()}" /></li>
+                     th:src="${product.imgRef}" /></li>
             <li>
-                <a th:href="@{/v1/products/{id}(id=${product.getId()})}" th:utext="${product.getName()}"></a>
+                <a th:href="@{/v1/products/{id}(id=${product.id})}" th:utext="${product.name}"></a>
             </li>
-            <li><span th:utext="${product.getPrice()}"></span></li>
+            <li><span th:utext="${product.price}"></span></li>
         </ul>
     </div>
     <br/>

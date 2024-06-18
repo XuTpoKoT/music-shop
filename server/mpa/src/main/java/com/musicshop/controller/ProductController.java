@@ -1,6 +1,9 @@
 package com.musicshop.controller;
 
+import com.musicshop.dto.ProductDto;
 import com.musicshop.entity.Product;
+import com.musicshop.error.ProductNotFoundException;
+import com.musicshop.mapper.ProductMapper;
 import com.musicshop.repo.ProductRepo;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -23,12 +26,14 @@ import java.util.UUID;
 @Slf4j
 public class ProductController {
     private final ProductRepo productRepo;
+    private final ProductMapper productMapper;
 
     @GetMapping()
     public String getProductsByPageNumber(@RequestParam(name = "pageNumber", defaultValue = "1") @Min(1) int pageNumber,
                                           @RequestParam(name = "pageSize", defaultValue = "3")  // TODO
                                           @Min(1) int pageSize, Model model) {
-        Page<Product> pageOfProducts = productRepo.findAll(PageRequest.of(pageNumber, pageSize));
+        Page<ProductDto> pageOfProducts = productRepo.findAll(PageRequest.of(pageNumber, pageSize))
+                .map(productMapper::toDto);
         model.addAttribute("paginationProducts", pageOfProducts);
 
         return "home";
@@ -37,7 +42,10 @@ public class ProductController {
     @GetMapping("/{id}")
     public String getProductInfo(@PathVariable String id, Model model) {
         Optional<Product> product = productRepo.findById(UUID.fromString(id));
-        model.addAttribute("product", product);
+        if (product.isEmpty()) {
+            throw new ProductNotFoundException("Product " + id + " not found");
+        }
+        model.addAttribute("product", productMapper.toDto(product.get()));
 
         return "product";
     }
