@@ -1,6 +1,6 @@
 package com.musicshop.controller;
 
-import com.musicshop.dto.ProductDto;
+import com.musicshop.dto.ProductPageDto;
 import com.musicshop.entity.Product;
 import com.musicshop.error.ProductNotFoundException;
 import com.musicshop.mapper.ProductMapper;
@@ -32,9 +32,9 @@ public class ProductController {
     public String getProductsByPageNumber(@RequestParam(name = "pageNumber", defaultValue = "1") @Min(1) int pageNumber,
                                           @RequestParam(name = "pageSize", defaultValue = "3")  // TODO
                                           @Min(1) int pageSize, Model model) {
-        Page<ProductDto> pageOfProducts = productRepo.findAll(PageRequest.of(pageNumber, pageSize))
-                .map(productMapper::toDto);
-        model.addAttribute("paginationProducts", pageOfProducts);
+        Page<Product> productPage = productRepo.findAll(PageRequest.of(pageNumber - 1, pageSize));
+        ProductPageDto productDtoPage = productMapper.productPageToDto(productPage);
+        model.addAttribute("paginationProducts", productDtoPage);
 
         return "home";
     }
@@ -45,7 +45,7 @@ public class ProductController {
         if (product.isEmpty()) {
             throw new ProductNotFoundException("Product " + id + " not found");
         }
-        model.addAttribute("product", productMapper.toDto(product.get()));
+        model.addAttribute("product", productMapper.productToDto(product.get()));
 
         return "product";
     }

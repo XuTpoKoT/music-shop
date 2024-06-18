@@ -10,7 +10,7 @@
     <th:block th:include="_header"></th:block>
     <th:block th:include="_menu"></th:block>
 
-    <div class="product-preview-container" th:each="product : ${paginationProducts.getContent()}">
+    <div class="product-preview-container" th:each="product : ${paginationProducts.content}">
         <ul>
             <li><img class="product-image"
                      th:src="${product.imgRef}" /></li>
@@ -22,16 +22,11 @@
     </div>
     <br/>
 
-    <nav id="navigationPanel" style="display:inline" th:if="${paginationProducts.getTotalPages() > 1}">
+    <nav id="navigationPanel" style="display:inline" th:if="${paginationProducts.totalPages > 1}">
         <script th:inline="javascript">
-            const totalPages = /*[[${paginationProducts.totalPages}]]*/ 1;
-            const currentPage = /*[[${paginationProducts.number}]]*/ 2;
-            console.log('More than one page available: ' + totalPages);
-            const navigationPanel = document.getElementById('navigationPanel');
-            for (let pageNumber = 1; pageNumber <= totalPages; pageNumber++) {
+            function addLinkToNavigationPanel(pageNumber, currentPage, navigationPanel) {
                 const anchor = document.createElement('a');
                 const url = '/v1/products?pageNumber=' + pageNumber;
-                console.log(url);
                 anchor.setAttribute('href', url);
                 anchor.className = "nav-item";
                 if (pageNumber === currentPage) {
@@ -39,6 +34,25 @@
                 }
                 anchor.textContent = pageNumber + ' ';
                 navigationPanel.appendChild(anchor);
+            }
+
+            const totalPages = /*[[${paginationProducts.totalPages}]]*/ 1;
+            const currentPage = /*[[${paginationProducts.currentPage}]]*/ 1;
+            const navigationPanel = document.getElementById('navigationPanel');
+            if (currentPage > 1) {
+                addLinkToNavigationPanel(1, currentPage, navigationPanel);
+            }
+            if (totalPages > 1) {
+                if (currentPage > 2) {
+                    addLinkToNavigationPanel(currentPage - 1, currentPage, navigationPanel);
+                }
+                addLinkToNavigationPanel(currentPage, currentPage, navigationPanel);
+                if (totalPages > currentPage) {
+                    addLinkToNavigationPanel(currentPage + 1, currentPage, navigationPanel);
+                }
+                if (totalPages > currentPage + 1) {
+                    addLinkToNavigationPanel(totalPages, currentPage, navigationPanel);
+                }
             }
         </script>
     </nav>
