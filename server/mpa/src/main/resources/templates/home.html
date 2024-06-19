@@ -12,8 +12,9 @@
 
     <div class="product-preview-container" th:each="product : ${paginationProducts.content}">
         <ul>
-            <li><img class="product-image"
-                     th:src="${product.imgRef}" /></li>
+            <li>
+                <img class="product-image" th:src="${product.imgRef}" />
+            </li>
             <li>
                 <a th:href="@{/v1/products/{id}(id=${product.id})}" th:utext="${product.name}"></a>
             </li>

@@ -1,5 +1,7 @@
 databaseChangeLog:
   - include:
-      file: db/changelog/db.changelog-1.0.yaml
+      file: db/changelog/2024-06-10_create-manufacturers-table.yaml
   - include:
-      file: db/changelog/db.changelog-1.1.yaml
+      file: db/changelog/2024-06-11_create-products-table.yaml
+  - include:
+      file: db/changelog/2024-06-19_create-users-table.yaml

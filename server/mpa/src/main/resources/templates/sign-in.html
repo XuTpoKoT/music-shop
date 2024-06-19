@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Login</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/styles/main.css}" />
+</head>
+<body>
+  <th:block th:include="_menu"></th:block>
+
+  <div class="container">
+    <form action="/v1/auth/sign-in" method="post">
+      <h2>Вход</h2>
+      <p>
+        <label for="username">Логин</label>
+        <input type="text" id="username" name="username" class="form-control" placeholder="логин" required>
+      </p>
+      <p>
+        <label for="password">Пароль</label>
+        <input type="password" id="password" name="password" class="form-control" placeholder="пароль" required>
+      </p>
+      <button style="margin-bottom: 10px;" type="submit">Войти</button>
+    </form>
+
+    <form action="/v1/auth/sign-up" method="get">
+      <button type="submit" >Регистрация</button>
+    </form>
+
+    <div th:if="${param.error}" class="error-message">
+      Неверный логин или пароль
+    </div>
+
+  </div>
+</body>
+</html>

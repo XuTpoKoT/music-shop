@@ -20,15 +20,22 @@ dependencyManagement {
     }
 }
 
+ext {
+    mapstructVersion = '1.5.5.Final'
+}
 dependencies {
     implementation 'org.springframework.boot:spring-boot'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.data:spring-data-jpa'
+    implementation 'org.springframework.security:spring-security-core'
     implementation 'org.hibernate.orm:hibernate-core'
     implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3.7.6'
     implementation 'org.postgresql:postgresql'
     implementation "org.projectlombok:lombok"
+    implementation "org.mapstruct:mapstruct:$mapstructVersion"
 
     annotationProcessor "org.projectlombok:lombok"
+    annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

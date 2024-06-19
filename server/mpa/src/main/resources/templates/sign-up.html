@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Registration</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/styles/main.css}" />
+</head>
+<body>
+  <th:block th:include="_menu"></th:block>
+
+  <div class="container">
+
+    <form th:action="@{/v1/auth/sign-up}" th:object="${signUpRequest}" method="post">
+      <h2>Регистрация</h2>
+      <p>
+        <label for="username">Логин</label>
+        <input type="text" id="username" name="username" class="form-control"
+               placeholder="логин" th:field="*{username}" required>
+      </p>
+      <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">login error</div>
+      <p>
+        <label for="password">Пароль</label>
+        <input type="password" id="password" name="password" class="form-control"
+               placeholder="пароль" th:field="*{password}" required>
+      </p>
+      <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">login error</div>
+
+      <span style="color:red" th:if="${error != null}" th:text="${error}"></span>
+      <br>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Зарегистрироваться</button>
+    </form>
+
+
+
+  </div>
+</body>
+</html>
