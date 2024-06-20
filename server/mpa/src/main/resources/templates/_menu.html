@@ -1,6 +1,13 @@
 <div class="menu-container"
-     xmlns:th="http://www.thymeleaf.org" >
+     xmlns:th="http://www.thymeleaf.org">
 
   <a th:href="@{/v1/products}">Главная</a>
+
+  <th:block th:if="${#authentication.name != null}">
+    |
+    <a th:href="@{/v1/users/{login}(login=${#authentication.getName()})}">
+      Профиль
+    </a>
+  </th:block>
 
 </div>

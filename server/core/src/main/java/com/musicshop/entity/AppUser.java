@@ -12,7 +12,6 @@ public class AppUser {
     public enum Role {
         CUSTOMER,
         EMPLOYEE,
-        UNREGISTERED;
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,10 +20,14 @@ public class AppUser {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
+    private Integer bonuses;
 
     public AppUser(String username, String password, Role role) {
         this.username = username;
         this.password = password;
         this.role = role;
+        if (role == Role.CUSTOMER) {
+            this.bonuses = 0;
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.musicshop.security;
 
 import com.musicshop.entity.AppUser;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,7 @@ import java.util.List;
 
 
 public class SecurityUser implements UserDetails {
+    @Getter
     private AppUser user;
 
     public SecurityUser(AppUser user) {

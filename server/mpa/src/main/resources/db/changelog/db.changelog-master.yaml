@@ -5,3 +5,5 @@ databaseChangeLog:
       file: db/changelog/2024-06-11_create-products-table.yaml
   - include:
       file: db/changelog/2024-06-19_create-users-table.yaml
+  - include:
+      file: db/changelog/2024-06-20_alter-users-table-bonuses-column.yaml

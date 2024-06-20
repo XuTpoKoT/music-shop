@@ -1,14 +1,12 @@
 package com.musicshop.controller;
 
 import com.musicshop.dto.SignUpRequest;
-import com.musicshop.entity.AppUser;
-import com.musicshop.repo.UserRepo;
+import com.musicshop.error.OccupiedLoginException;
+import com.musicshop.service.RegistrationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,8 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AuthController {
     @Value("${api-version}")
     private String apiVersion;
-    private final UserRepo userRepo;
-    private final PasswordEncoder passwordEncoder;
+    private final RegistrationService registrationService;
 
     @GetMapping("/sign-in")
     public String getSignInPage() {
@@ -46,12 +43,15 @@ public class AuthController {
         if (bindingResult.hasErrors()) {
             return "sign-up";
         }
+
         try {
-            userRepo.save(new AppUser(req.username(), passwordEncoder.encode(req.password()), AppUser.Role.CUSTOMER));
-        } catch (DataIntegrityViolationException e) {
-            model.addAttribute("error", "Login " + req.username() + " is occupied");
+            registrationService.signUpCustomer(req.username(), req.password());
+        } catch (OccupiedLoginException e) {
+            log.info(e.getMessage());
+            model.addAttribute("error", e.getMessage());
             return "sign-up";
         }
+
         return "redirect:/v1/products";
     }
 }
