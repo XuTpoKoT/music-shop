@@ -2,9 +2,11 @@ package com.musicshop.controller;
 
 import com.musicshop.entity.AppUser;
 import com.musicshop.entity.CartItem;
+import com.musicshop.entity.PickUpPoint;
 import com.musicshop.entity.Product;
 import com.musicshop.mapper.CartItemMapper;
 import com.musicshop.repo.CartItemRepo;
+import com.musicshop.repo.PickUpPointRepo;
 import com.musicshop.repo.ProductRepo;
 import com.musicshop.security.SecurityUser;
 import jakarta.persistence.EntityNotFoundException;
@@ -27,6 +29,7 @@ import java.util.UUID;
 public class CartController {
     private final CartItemRepo cartItemRepo;
     private final ProductRepo productRepo;
+    private final PickUpPointRepo pickUpPointRepo;
     private final CartItemMapper cartItemMapper;
 
     @GetMapping
@@ -38,6 +41,8 @@ public class CartController {
             AppUser appUser = securityUser.getUser();
             List<CartItem> cartItems = cartItemRepo.findByUserId(appUser.getId());
             model.addAttribute("cartItems", cartItemMapper.cartItemsToDto(cartItems));
+            List<PickUpPoint> pickUpPoints = pickUpPointRepo.findAll();
+            model.addAttribute("pickUpPoints", pickUpPoints);
         }
 
         return "cart";

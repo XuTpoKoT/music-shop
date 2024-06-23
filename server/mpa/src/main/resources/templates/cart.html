@@ -54,10 +54,10 @@
     <div class="summary">
       <div class="summary-total-items"><span class="total-items"></span>Точка доставки</div>
       <div class="summary-checkout">
-        <form class="form-signin" th:action="@{/api/v1/orders(login=${#authentication.getName()})}" method="post">
+        <form class="form-signin" th:action="@{/v1/orders(login=${#authentication.name})}" method="post">
           <div class="summary-delivery">
-            <select th:name="deliveryPointId" class="summary-delivery-selection" >
-              <option th:value="${dp.getId()}" th:text="${dp.getAddress()}" th:each="dp : ${deliveryPoints}"></option>
+            <select th:name="pickUpPointId" class="summary-delivery-selection" >
+              <option th:value="${pp.id}" th:text="${pp.address}" th:each="pp : ${pickUpPoints}"></option>
             </select>
           </div>
           <div class="form-inline">

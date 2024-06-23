@@ -11,3 +11,5 @@ databaseChangeLog:
       file: db/changelog/2024-06-20_create-cart-table.yaml
   - include:
       file: db/changelog/2024-06-22_alter-table-cart-add-unique-con.yaml
+  - include:
+      file: db/changelog/2024-06-23_create-pickup_points-table.yaml

@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 7
+      author: Dmitriy Morozov
+      changes:
+        - createTable:
+            tableName: pickup_points
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: uuid_generate_v4()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: address
+                  type: varchar
+                  constraints:
+                    unique: true
