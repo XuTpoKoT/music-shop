@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/styles/main.css}" />
 </head>
 
-<body>
+<body xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     <th:block th:include="_header"></th:block>
     <th:block th:include="_menu"></th:block>
 
@@ -19,6 +19,12 @@
                 <a th:href="@{/v1/products/{id}(id=${product.id})}" th:utext="${product.name}"></a>
             </li>
             <li><span th:utext="${product.price}"></span></li>
+            <li sec:authorize="hasAnyAuthority('CUSTOMER', 'EMPLOYEE')">
+                <form class="form-signin" th:action="@{/v1/users/{login}/cart(login=${#authentication.name})}" method="post">
+                    <input type="hidden" id="productId" name="productId" th:value="${product.id}">
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">В корзину</button>
+                </form>
+            </li>
         </ul>
     </div>
     <br/>

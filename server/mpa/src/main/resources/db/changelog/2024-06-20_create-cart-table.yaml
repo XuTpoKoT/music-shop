@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: 5
+      author: Dmitriy Morozov
+      changes:
+        - sql:
+              splitStatements: false
+              stripComments: true
+              sql: CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+        - createTable:
+            tableName: cart
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                  defaultValueComputed: uuid_generate_v4()
+              - column:
+                  name: user_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_cart_users
+                    referencedTableName: users
+                    referencedColumnNames: id
+                    deleteCascade: true
+              - column:
+                  name: product_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_cart_products
+                    referencedTableName: products
+                    referencedColumnNames: id
+                    deleteCascade: true
+              - column:
+                  name: count
+                  type: int
+                  constraints:
+                    nullable: false
+                    checkConstraint: "count > 0"

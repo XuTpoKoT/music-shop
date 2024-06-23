@@ -3,11 +3,17 @@
 
   <a th:href="@{/v1/products}">Главная</a>
 
-  <th:block th:if="${#authentication.name != null}">
+  <th:block th:if="${#authorization.expression('isAuthenticated()')}">
     |
     <a th:href="@{/v1/users/{login}(login=${#authentication.getName()})}">
       Профиль
     </a>
   </th:block>
 
+  <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+    |
+    <a th:href="@{/v1/users/{login}/cart(login=${#authentication.getName()})}">
+      Корзина
+    </a>
+  </th:block>
 </div>

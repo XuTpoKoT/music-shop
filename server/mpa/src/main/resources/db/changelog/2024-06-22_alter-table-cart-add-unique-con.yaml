@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 6
+      author: Dmitriy Morozov
+      changes:
+        - addUniqueConstraint:
+            columnNames: user_id, product_id
+            constraintName: uq_cart
+            tableName: cart

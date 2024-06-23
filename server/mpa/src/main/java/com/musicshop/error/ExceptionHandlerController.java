@@ -1,5 +1,6 @@
 package com.musicshop.error;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,9 +16,9 @@ public class ExceptionHandlerController {
         return "error";
     }
 
-    @ExceptionHandler(value = {ProductNotFoundException.class})
-    public String productNotFound(ProductNotFoundException ex, Model model) {
-        log.info(ex.getMessage());
+    @ExceptionHandler(value = {EntityNotFoundException.class})
+    public String productNotFound(EntityNotFoundException ex, Model model) {
+        log.error(ex.getMessage());
         model.addAttribute("error", ex.getMessage());
         return "error";
     }

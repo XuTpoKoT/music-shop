@@ -2,9 +2,9 @@ package com.musicshop.controller;
 
 import com.musicshop.dto.ProductPageDto;
 import com.musicshop.entity.Product;
-import com.musicshop.error.ProductNotFoundException;
 import com.musicshop.mapper.ProductMapper;
 import com.musicshop.repo.ProductRepo;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class ProductController {
 
     @GetMapping()
     public String getProductsByPageNumber(@RequestParam(name = "pageNumber", defaultValue = "1") @Min(1) int pageNumber,
-                                          @RequestParam(name = "pageSize", defaultValue = "3")  // TODO
+                                          @RequestParam(name = "pageSize", defaultValue = "6")  // TODO
                                           @Min(1) int pageSize, Model model) {
         Page<Product> productPage = productRepo.findAll(PageRequest.of(pageNumber - 1, pageSize));
         ProductPageDto productDtoPage = productMapper.productPageToDto(productPage);
@@ -40,10 +40,10 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public String getProductInfo(@PathVariable String id, Model model) {
-        Optional<Product> product = productRepo.findById(UUID.fromString(id));
+    public String getProductInfo(@PathVariable UUID id, Model model) {
+        Optional<Product> product = productRepo.findById(id);
         if (product.isEmpty()) {
-            throw new ProductNotFoundException("Product " + id + " not found");
+            throw new EntityNotFoundException("Product " + id + " not found");
         }
         model.addAttribute("product", productMapper.productToDto(product.get()));
 

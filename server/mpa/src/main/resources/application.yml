@@ -12,6 +12,7 @@ spring:
     properties:
       hibernate:
         default_schema: public
+    show-sql: true
   mvc:
     hiddenmethod:
       filter:
