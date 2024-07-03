@@ -12,6 +12,7 @@ import com.musicshop.repo.OrderRepo;
 import com.musicshop.repo.UserRepo;
 import com.musicshop.security.SecurityUser;
 import com.musicshop.service.OrderService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +54,7 @@ public class OrderController {
                                    Model model) {
         log.info("getOrders called with login " + login);
         SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        AppUser appUser = securityUser.getUser();
+        AppUser appUser = securityUser.getAppUser();
         Page<Order> orderPage = new PageImpl<>(new ArrayList<>());
         switch (appUser.getRole()) {
             case CUSTOMER -> {
@@ -75,29 +76,29 @@ public class OrderController {
                             @RequestParam(name = "customer", required = false) Integer customerId,
                             @RequestParam(required = false) boolean needSpendBonuses) {
         log.info("makeOrder called with login " + login);
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof SecurityUser securityUser) {
-            AppUser appUser = securityUser.getUser();
-            AppUser customer = appUser;
-            Integer employeeId = null;
-            if (appUser.getRole() == AppUser.Role.EMPLOYEE) {
-                customer = userRepo.findById(customerId).orElse(null);
-                employeeId = appUser.getId();
-            }
-            List<OrderItem> orderItems = cartItemMapper.cartItemsToOrderItems(
-                    cartItemRepo.findByUserId(appUser.getId()));
-
-            MakeOrderDto makeOrderDto = MakeOrderDto.builder()
-                    .employeeId(employeeId)
-                    .customer(customer)
-                    .timestamp(ZonedDateTime.now().withZoneSameLocal(ZoneId.of("UTC")))
-                    .pickUpPointId(pickUpPointId)
-                    .needSpendBonuses(needSpendBonuses)
-                    .orderItems(orderItems)
-                    .status(Order.Status.formed)
-                    .build();
-            orderService.makeOrder(makeOrderDto);
+        SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AppUser appUser = userRepo.findById(securityUser.getAppUser().getId()).orElseThrow(
+                () -> new EntityNotFoundException("User " + securityUser.getAppUser().getId() + " not found")
+        );
+        AppUser customer = appUser;
+        Integer employeeId = null;
+        if (appUser.getRole() == AppUser.Role.EMPLOYEE) {
+            customer = userRepo.findById(customerId).orElse(null);
+            employeeId = appUser.getId();
         }
+        List<OrderItem> orderItems = cartItemMapper.cartItemsToOrderItems(
+                cartItemRepo.findByUserId(appUser.getId()));
+
+        MakeOrderDto makeOrderDto = MakeOrderDto.builder()
+                .employeeId(employeeId)
+                .customer(customer)
+                .timestamp(ZonedDateTime.now().withZoneSameLocal(ZoneId.of("UTC")))
+                .pickUpPointId(pickUpPointId)
+                .needSpendBonuses(needSpendBonuses)
+                .orderItems(orderItems)
+                .status(Order.Status.formed)
+                .build();
+        orderService.makeOrder(makeOrderDto);
 
         return "redirect:/v1/products";
     }

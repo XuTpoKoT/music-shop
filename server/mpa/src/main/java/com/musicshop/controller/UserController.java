@@ -26,7 +26,7 @@ public class UserController {
     public String getUserInfo(@PathVariable String login, Model model) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof SecurityUser securityUser) {
-            AppUser appUser = securityUser.getUser();
+            AppUser appUser = securityUser.getAppUser();
             UserInfoResponse userInfoResponse = userMapper.userToDto(appUser);
             model.addAttribute("user", userInfoResponse);
         }

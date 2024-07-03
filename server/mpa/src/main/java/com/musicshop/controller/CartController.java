@@ -38,7 +38,7 @@ public class CartController {
         log.info("getProductsInCart called with login " + login);
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof SecurityUser securityUser) {
-            AppUser appUser = securityUser.getUser();
+            AppUser appUser = securityUser.getAppUser();
             List<CartItem> cartItems = cartItemRepo.findByUserId(appUser.getId());
             model.addAttribute("cartItems", cartItemMapper.cartItemsToDto(cartItems));
             List<PickUpPoint> pickUpPoints = pickUpPointRepo.findAll();
@@ -55,7 +55,7 @@ public class CartController {
         log.info("addProductToCart called with login " + login + " and product " + productId);
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof SecurityUser securityUser) {
-            AppUser appUser = securityUser.getUser();
+            AppUser appUser = securityUser.getAppUser();
             Product product = productRepo.findById(productId).orElseThrow(() ->
                     new EntityNotFoundException("Product " + productId + " not found"));
             cartItemRepo.saveOnConflictIgnore(new CartItem(appUser.getId(), product, 1));

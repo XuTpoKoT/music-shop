@@ -12,25 +12,25 @@ import java.util.List;
 
 public class SecurityUser implements UserDetails {
     @Getter
-    private AppUser user;
+    private AppUser appUser;
 
-    public SecurityUser(AppUser user) {
-        this.user = user;
+    public SecurityUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return appUser.getUsername();
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return appUser.getPassword();
     }
 
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(user.getRole().toString()));
+        return List.of(new SimpleGrantedAuthority(appUser.getRole().toString()));
     }
 
     @Override
