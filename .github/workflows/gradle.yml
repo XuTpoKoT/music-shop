@@ -27,7 +27,7 @@ jobs:
         distribution: 'temurin'
         
     - name: Build with Gradle
-      run: ./server/gradlew :core:build
+      run: cd server && ./gradlew :core:build
 
     - name: Run tests
-      run: ./server/gradlew :core:test
+      run: cd server && ./gradlew :core:test
