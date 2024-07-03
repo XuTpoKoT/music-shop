@@ -50,7 +50,7 @@ public class OrderController {
     @PreAuthorize("#login == authentication.name")
     public String getOrdersByLogin(@RequestParam String login,
                                    @RequestParam(name = "pageNumber", defaultValue = "1") @Min(1) int pageNumber,
-                                   @RequestParam(name = "pageSize", defaultValue = "6") @Min(1) int pageSize, // TODO
+                                   @RequestParam(name = "pageSize", defaultValue = "${defaultPageSize}") @Min(1) int pageSize,
                                    Model model) {
         log.info("getOrders called with login " + login);
         SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

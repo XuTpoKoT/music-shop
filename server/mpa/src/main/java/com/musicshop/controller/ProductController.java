@@ -30,7 +30,7 @@ public class ProductController {
 
     @GetMapping()
     public String getProductsByPageNumber(@RequestParam(name = "pageNumber", defaultValue = "1") @Min(1) int pageNumber,
-                                          @RequestParam(name = "pageSize", defaultValue = "6")  // TODO
+                                          @RequestParam(name = "pageSize", defaultValue = "${defaultPageSize}")
                                           @Min(1) int pageSize, Model model) {
         Page<Product> productPage = productRepo.findAll(PageRequest.of(pageNumber - 1, pageSize));
         ProductPageDto productDtoPage = productMapper.productPageToDto(productPage);

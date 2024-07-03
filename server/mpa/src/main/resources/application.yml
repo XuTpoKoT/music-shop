@@ -24,7 +24,7 @@ spring:
 bonuses:
   max-spend-percent: 30
   accrued-percent: 5
-defaultPageSize: 2
+defaultPageSize: 6
 
 api-version:
   "v1"
