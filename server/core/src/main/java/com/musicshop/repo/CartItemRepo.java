@@ -17,4 +17,8 @@ public interface CartItemRepo extends JpaRepository<CartItem, UUID> {
     @Query(value = "INSERT INTO cart (user_id, product_id, count) VALUES (:#{#item.userId}," +
             " :#{#item.product.id}, 1) ON CONFLICT (user_id, product_id) DO NOTHING", nativeQuery = true)
     void saveOnConflictIgnore(@Param("item") CartItem cartItem);
+
+    @Modifying
+    @Transactional
+    void deleteByUserId(Integer userId);
 }

@@ -16,12 +16,13 @@ public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private Integer userId;
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
     private Product product;
     @Setter
+    @Column(nullable = false)
     private Integer count;
 
     public CartItem(Integer userId, Product product, Integer count) {

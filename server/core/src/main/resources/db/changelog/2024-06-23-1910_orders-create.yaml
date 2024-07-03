@@ -1,0 +1,60 @@
+databaseChangeLog:
+  - changeSet:
+      id: 8
+      author: Dmitriy Morozov
+      changes:
+        - createTable:
+            tableName: orders
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: customer_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_orders_users_c
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: employee_id
+                  type: int
+                  constraints:
+                    foreignKeyName: fk_orders_users_e
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: timestamp
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar
+                  constraints:
+                    nullable: false
+                    checkConstraint: "status IN ('formed', 'built', 'delivered', 'received')"
+              - column:
+                  name: pickup_point_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_orders_pp
+                    referencedTableName: pickup_points
+                    referencedColumnNames: id
+              - column:
+                  name: initial_cost
+                  type: int
+                  constraints:
+                    nullable: false
+                    checkConstraint: "initial_cost > 0"
+              - column:
+                  name: paid_by_bonuses
+                  type: int
+                  constraints:
+                    nullable: false
+                    checkConstraint: "paid_by_bonuses <= initial_cost"

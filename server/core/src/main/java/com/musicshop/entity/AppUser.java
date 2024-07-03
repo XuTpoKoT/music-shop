@@ -16,9 +16,12 @@ public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(nullable = false, unique = true)
     private String username;
+    @Column(nullable = false)
     private String password;
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
     private Integer bonuses;
 
@@ -29,5 +32,9 @@ public class AppUser {
         if (role == Role.CUSTOMER) {
             this.bonuses = 0;
         }
+    }
+
+    public void incBonuses(int accruedBonuses) {
+        this.bonuses += accruedBonuses;
     }
 }

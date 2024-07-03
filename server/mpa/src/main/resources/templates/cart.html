@@ -64,11 +64,11 @@
             <input type="checkbox" name="needSpendBonuses"/>
             <label for="customer">Снять бонусы</label>
           </div>
-
           <div sec:authorize="hasAuthority('EMPLOYEE')">
             <label for="customer">Логин заказчика</label>
             <input type="text" id="customer" name="customer">
           </div>
+
           <button class="checkout-cta" type="submit">Оформить</button>
         </form>
         <div th:if="${param.errorMessage}" class="error-message">

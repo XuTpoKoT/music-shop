@@ -21,6 +21,9 @@ spring:
     prefix: "classpath:/templates/"
     suffix: .html
 
+bonuses:
+  max-spend-percent: 30
+  accrued-percent: 5
 defaultPageSize: 2
 
 api-version:

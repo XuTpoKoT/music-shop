@@ -3,6 +3,8 @@ package com.musicshop.entity;
 
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
@@ -13,6 +15,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "products")
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 public class Product {
     @Id
