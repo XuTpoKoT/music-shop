@@ -1,0 +1,26 @@
+<div class="menu-container"
+     xmlns:th="http://www.thymeleaf.org">
+
+  <a th:href="@{/v1/products}">Главная</a>
+
+  <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+    |
+    <a th:href="@{/v1/users/{login}(login=${#authentication.getName()})}">
+      Профиль
+    </a>
+  </th:block>
+
+  <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+    |
+    <a th:href="@{/v1/users/{login}/cart(login=${#authentication.getName()})}">
+      Корзина
+    </a>
+  </th:block>
+
+  <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+    |
+    <a th:href="@{/v1/orders(login=${#authentication.getName()})}">
+      История заказов
+    </a>
+  </th:block>
+</div>

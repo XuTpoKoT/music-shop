@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/main.css}" />
+</head>
+<body>
+  <th:block th:include="_header"></th:block>
+  <th:block th:include="_menu"></th:block>
+
+  <div class="page-title">Мои заказы</div>
+  <table border="1" style="width:100%">
+
+    <tr>
+      <th>Номер заказа</th>
+      <th>Дата</th>
+      <th>Точка доставки</th>
+      <th>Имя Заказчика</th>
+      <th>Статус</th>
+      <th>Стоимость</th>
+      <th>Оплачено бонусами</th>
+    </tr>
+    <tr th:each="order : ${orderPage.content()}">
+      <td th:utext="${order.id}"></td>
+      <td th:utext="${#temporals.format(order.timestamp,'dd-MM-yyyy HH:mm')}"></td>
+      <td th:utext="${order.pickUpPointAddress}"></td>
+      <td th:utext="${order.customerUsername()}"></td>
+      <td th:utext="${order.status.name}"></td>
+      <td th:utext="${order.initialCost}"></td>
+      <td th:utext="${order.paidByBonuses}"></td>
+    </tr>
+  </table>
+
+  <nav id="navigationPanel" style="display:inline" th:if="${orderPage.totalPages > 1}">
+    <script th:inline="javascript">
+      function addLinkToNavigationPanel(pageNumber, currentPage, navigationPanel) {
+        const anchor = document.createElement('a');
+        const login = /*[[${#authentication.name}]]*/ "";
+        const url = '/v1/orders?pageNumber=' + pageNumber + "&login=" + login;
+        anchor.setAttribute('href', url);
+        anchor.className = "nav-item";
+        if (pageNumber === currentPage) {
+          anchor.style.color = 'blueviolet';
+        }
+        anchor.textContent = pageNumber + ' ';
+        navigationPanel.appendChild(anchor);
+      }
+
+      const totalPages = /*[[${orderPage.totalPages}]]*/ 1;
+      const currentPage = /*[[${orderPage.currentPage}]]*/ 1;
+      const navigationPanel = document.getElementById('navigationPanel');
+      if (currentPage > 1) {
+        addLinkToNavigationPanel(1, currentPage, navigationPanel);
+      }
+      if (totalPages > 1) {
+        if (currentPage > 2) {
+          addLinkToNavigationPanel(currentPage - 1, currentPage, navigationPanel);
+        }
+        addLinkToNavigationPanel(currentPage, currentPage, navigationPanel);
+        if (totalPages > currentPage) {
+          addLinkToNavigationPanel(currentPage + 1, currentPage, navigationPanel);
+        }
+        if (totalPages > currentPage + 1) {
+          addLinkToNavigationPanel(totalPages, currentPage, navigationPanel);
+        }
+      }
+    </script>
+  </nav>
+
+</body>
+</html>

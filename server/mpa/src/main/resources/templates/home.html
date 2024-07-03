@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Music Shop Online</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/main.css}" />
+</head>
+
+<body xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <th:block th:include="_header"></th:block>
+    <th:block th:include="_menu"></th:block>
+
+    <div class="product-preview-container" th:each="product : ${paginationProducts.content}">
+        <ul>
+            <li>
+                <img class="product-image" th:src="${product.imgRef}" />
+            </li>
+            <li>
+                <a th:href="@{/v1/products/{id}(id=${product.id})}" th:utext="${product.name}"></a>
+            </li>
+            <li><span th:utext="${product.price}"></span></li>
+            <li sec:authorize="hasAnyAuthority('CUSTOMER', 'EMPLOYEE')">
+                <form class="form-signin" th:action="@{/v1/users/{login}/cart(login=${#authentication.name})}" method="post">
+                    <input type="hidden" id="productId" name="productId" th:value="${product.id}">
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">В корзину</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+    <br/>
+
+    <nav id="navigationPanel" style="display:inline" th:if="${paginationProducts.totalPages > 1}">
+        <script th:inline="javascript">
+            function addLinkToNavigationPanel(pageNumber, currentPage, navigationPanel) {
+                const anchor = document.createElement('a');
+                const url = '/v1/products?pageNumber=' + pageNumber;
+                anchor.setAttribute('href', url);
+                anchor.className = "nav-item";
+                if (pageNumber === currentPage) {
+                    anchor.style.color = 'blueviolet';
+                }
+                anchor.textContent = pageNumber + ' ';
+                navigationPanel.appendChild(anchor);
+            }
+
+            const totalPages = /*[[${paginationProducts.totalPages}]]*/ 1;
+            const currentPage = /*[[${paginationProducts.currentPage}]]*/ 1;
+            const navigationPanel = document.getElementById('navigationPanel');
+            if (currentPage > 1) {
+                addLinkToNavigationPanel(1, currentPage, navigationPanel);
+            }
+            if (totalPages > 1) {
+                if (currentPage > 2) {
+                    addLinkToNavigationPanel(currentPage - 1, currentPage, navigationPanel);
+                }
+                addLinkToNavigationPanel(currentPage, currentPage, navigationPanel);
+                if (totalPages > currentPage) {
+                    addLinkToNavigationPanel(currentPage + 1, currentPage, navigationPanel);
+                }
+                if (totalPages > currentPage + 1) {
+                    addLinkToNavigationPanel(totalPages, currentPage, navigationPanel);
+                }
+            }
+        </script>
+    </nav>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Music Shop Online</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/main.css}" />
+</head>
+<body xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <th:block th:include="_header"></th:block>
+    <th:block th:include="_menu"></th:block>
+
+    <p th:text="'Название: ' + ${product.name}"></p>
+    <p th:text="'Цена: ' + ${product.price}"></p>
+    <p th:text="'Цвет: ' + ${product.color}"></p>
+    <p th:text="'Производитель: ' + ${product.manufacturerName}"></p>
+    <p th:text="'Описание: ' + ${product.description}"></p>
+    <p th:text="'Дополнительные зарактеристики: '"></p>
+    <div th:each="entry : ${product.characteristics}">
+        <p th:text="${entry.key} + ': ' + ${entry.value}"></p>
+    </div>
+
+    <form sec:authorize="hasAnyAuthority('CUSTOMER', 'EMPLOYEE')" class="form-signin"
+          th:action="@{/v1/users/{login}/cart(login=${#authentication.name})}" method="post">
+        <input type="hidden" id="productId" name="productId" th:value="${product.id}">
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Добавить в корзину</button>
+    </form>
+
+</body>
+</html>

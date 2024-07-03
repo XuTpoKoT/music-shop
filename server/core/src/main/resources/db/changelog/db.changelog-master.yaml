@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/2024-06-10_manufacturers-create.yaml
+  - include:
+      file: db/changelog/2024-06-11_products-create.yaml
+  - include:
+      file: db/changelog/2024-06-19_users-create.yaml
+  - include:
+      file: db/changelog/2024-06-20_users-add-bonuses-column.yaml
+  - include:
+      file: db/changelog/2024-06-20_cart-create.yaml
+  - include:
+      file: db/changelog/2024-06-22_cart-add-unique-con.yaml
+  - include:
+      file: db/changelog/2024-06-23-1000_pickup-points-create.yaml
+  - include:
+      file: db/changelog/2024-06-23-1910_orders-create.yaml
+  - include:
+      file: db/changelog/2024-06-23-1920_order-items-create.yaml

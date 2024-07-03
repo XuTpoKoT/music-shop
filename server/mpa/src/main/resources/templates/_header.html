@@ -1,0 +1,22 @@
+<div class="header-container"
+     xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <div class="site-name">Магазин музыкальных инструментов</div>
+
+    <div class="header-bar">
+        <th:block sec:authorize="isAuthenticated()">
+            Привет,
+            <a th:utext="${#authentication.name}">..</a>
+            |
+            <form style="display:inline" action="/v1/auth/sign-out" method="POST">
+                <a href="#" onclick="this.parentNode.submit()">Выйти</a>
+            </form>
+        </th:block>
+
+        <th:block sec:authorize="!isAuthenticated()">
+            <a th:href="@{/v1/auth/sign-in}">Войти</a>
+        </th:block>
+    </div>
+
+</div>

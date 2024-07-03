@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: 9
+      author: Dmitriy Morozov
+      changes:
+        - createTable:
+            tableName: order_product
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                  defaultValueComputed: uuid_generate_v4()
+              - column:
+                  name: order_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_order_product_oi
+                    referencedTableName: orders
+                    referencedColumnNames: id
+                    deleteCascade: true
+              - column:
+                  name: product_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_order_product_pi
+                    referencedTableName: products
+                    referencedColumnNames: id
+              - column:
+                  name: price
+                  type: int
+                  constraints:
+                    nullable: false
+                    checkConstraint: "price > 0"
+              - column:
+                  name: count
+                  type: int
+                  constraints:
+                    nullable: false
+                    checkConstraint: "count > 0"
+        - addUniqueConstraint:
+            columnNames: order_id, product_id
+            constraintName: uq_order_product
+            tableName: order_product
