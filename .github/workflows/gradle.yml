@@ -38,4 +38,5 @@ jobs:
           command: |
             cd ${{ secrets.PROJECT_FOLDER }};
             git checkout main;
+            ls -a;
             git pull;
