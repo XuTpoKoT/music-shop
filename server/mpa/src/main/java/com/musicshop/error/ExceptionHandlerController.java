@@ -17,9 +17,15 @@ public class ExceptionHandlerController {
     }
 
     @ExceptionHandler(value = {EntityNotFoundException.class})
-    public String productNotFound(EntityNotFoundException ex, Model model) {
+    public String entityNotFound(EntityNotFoundException ex, Model model) {
         log.error(ex.getMessage());
         model.addAttribute("error", ex.getMessage());
+        return "error";
+    }
+
+    @ExceptionHandler(value = {AccessForbiddenException.class})
+    public String accessForbidden(AccessForbiddenException ex, Model model) {
+        model.addAttribute("error", "access forbidden");
         return "error";
     }
 }

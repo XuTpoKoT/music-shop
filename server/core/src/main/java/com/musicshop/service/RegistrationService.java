@@ -5,6 +5,7 @@ import com.musicshop.error.OccupiedLoginException;
 import com.musicshop.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,5 +21,12 @@ public class RegistrationService {
         } catch (DataIntegrityViolationException e) {
             throw new OccupiedLoginException("Login " + username + " is occupied", e);
         }
+    }
+
+    public static void main(String[] args) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+        String password = args[0];
+        System.out.println(password);
+        System.out.println(encoder.encode(password));
     }
 }

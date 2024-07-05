@@ -5,6 +5,7 @@ import com.musicshop.dto.OrderPageDto;
 import com.musicshop.entity.AppUser;
 import com.musicshop.entity.Order;
 import com.musicshop.entity.OrderItem;
+import com.musicshop.error.AccessForbiddenException;
 import com.musicshop.mapper.CartItemMapper;
 import com.musicshop.mapper.OrderMapper;
 import com.musicshop.repo.CartItemRepo;
@@ -23,15 +24,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Controller
@@ -45,6 +44,22 @@ public class OrderController {
     private final UserRepo userRepo;
     private final CartItemMapper cartItemMapper;
     private final OrderMapper orderMapper;
+
+    @GetMapping("/{id}")
+    public String getOrder(@PathVariable UUID id, Model model) {
+        log.info("getOrder called with id " + id);
+        Order order = orderRepo.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Order " + id + " not found")
+        );
+        SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AppUser appUser = securityUser.getAppUser();
+        if (appUser.getRole() == AppUser.Role.CUSTOMER && !Objects.equals(order.getCustomer().getId(),
+                appUser.getId())) {
+            throw new AccessForbiddenException();
+        }
+        model.addAttribute("order", order);
+        return "order";
+    }
 
     @GetMapping
     @PreAuthorize("#login == authentication.name")
@@ -67,6 +82,18 @@ public class OrderController {
         model.addAttribute("orderPage", orderPageDto);
 
         return "orders";
+    }
+
+    @PatchMapping("/{id}")
+    public String setOrderStatus(@PathVariable UUID id,
+                                 @RequestParam String orderStatus) {
+        log.info("setOrderStatus called with order id " + id);
+        Order order = orderRepo.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Order " + id + " not found")
+        );
+        order.setStatus(Order.Status.valueOf(orderStatus));
+        orderRepo.save(order);
+        return "redirect:/v1/orders/" + id;
     }
 
     @PostMapping

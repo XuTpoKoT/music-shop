@@ -36,6 +36,7 @@ public class Order {
     private ZonedDateTime timestamp;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Setter
     private Status status;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pickup_point_id", nullable = false)

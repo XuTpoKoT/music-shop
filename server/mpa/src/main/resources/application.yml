@@ -33,6 +33,7 @@ logging:
   level:
     org.thymeleaf: ERROR
     org.springframework.web: INFO
+    org.springframework.security: DEBUG
   pattern:
     console: "[%thread] %-5level %logger{36} - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
