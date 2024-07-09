@@ -8,30 +8,22 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@RequestMapping("/${api-version}/users")
+@RestController
 @RequiredArgsConstructor
 @Slf4j
-public class UserController {
+public class UserControllerImpl implements UserController {
     private final UserRepo userRepo;
     private final UserMapper userMapper;
 
-    @GetMapping("/{login}")
     @PreAuthorize("#login == authentication.name")
-    public String getUserInfo(@PathVariable String login, Model model) {
+    public UserInfoResponse getUserInfo(@PathVariable String login) {
         log.info("getUserInfo for " + login);
         AppUser appUser = userRepo.findByUsername(login).orElseThrow(
                 () -> new EntityNotFoundException("User " + login + " not found")
         );
-        UserInfoResponse userInfoResponse = userMapper.userToDto(appUser);
-        model.addAttribute("user", userInfoResponse);
-
-        return "user";
+        return userMapper.userToDto(appUser);
     }
 }

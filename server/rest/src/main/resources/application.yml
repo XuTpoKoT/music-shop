@@ -1,0 +1,60 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/music_shop_db}
+    username: ${DB_USERNAME:dev_user}
+    password: ${DB_PASSWORD:234}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        default_schema: public
+    show-sql: true
+server:
+  port:
+    ${API_PORT:8095}
+#  servlet:
+#    session:
+#      tracking-modes: cookie
+
+api-version:
+  "v2"
+openapi:
+  dev-url:
+    "http://localhost:8090"
+
+springdoc:
+  swagger-ui:
+    path:
+      "/swagger-ui"
+    tryItOutEnabled: true
+    operationsSorter: method
+    tagsSorter: alpha
+    filter: true
+  api-docs:
+    path:
+      "${api-version}/api-docs"
+  packages-to-scan:
+    "com.musicshop.controller"
+  show-login-endpoint:
+    true
+
+token:
+  signing:
+    key: 53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855
+
+logging:
+  level:
+    org.springframework.web: INFO
+    org.springframework.security: DEBUG
+    com.musicshop: INFO
+  pattern:
+    console: "[%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: "my.log"
+
+bonuses:
+  max-spend-percent: 30
+  accrued-percent: 5
+defaultPageSize: 6

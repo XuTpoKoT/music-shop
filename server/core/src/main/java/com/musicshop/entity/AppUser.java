@@ -34,6 +34,16 @@ public class AppUser {
         }
     }
 
+    public AppUser(Integer id, String username, String password, Role role) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        if (role == Role.CUSTOMER) {
+            this.bonuses = 0;
+        }
+    }
+
     public void incBonuses(int accruedBonuses) {
         this.bonuses += accruedBonuses;
     }

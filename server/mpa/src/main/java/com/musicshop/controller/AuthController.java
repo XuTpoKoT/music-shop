@@ -1,6 +1,6 @@
 package com.musicshop.controller;
 
-import com.musicshop.dto.SignUpRequest;
+import com.musicshop.dto.request.SignUpRequest;
 import com.musicshop.error.OccupiedLoginException;
 import com.musicshop.service.RegistrationService;
 import jakarta.validation.Valid;
@@ -45,13 +45,13 @@ public class AuthController {
         }
 
         try {
-            registrationService.signUpCustomer(req.username(), req.password());
+            registrationService.signUp(req.username(), req.password());
         } catch (OccupiedLoginException e) {
             log.info(e.getMessage());
             model.addAttribute("error", e.getMessage());
             return "sign-up";
         }
 
-        return "redirect:/v1/products";
+        return "redirect:/" + apiVersion + "/products";
     }
 }

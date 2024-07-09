@@ -1,8 +1,8 @@
 package com.musicshop.mapper;
 
 
-import com.musicshop.dto.ProductDto;
-import com.musicshop.dto.ProductPageDto;
+import com.musicshop.dto.response.ProductPageResponse;
+import com.musicshop.dto.response.ProductResponse;
 import com.musicshop.entity.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,8 +12,8 @@ import org.springframework.data.domain.Page;
 public interface ProductMapper {
 
     @Mapping(target = "manufacturerName", source = "manufacturer.name")
-    ProductDto productToDto(Product product);
+    ProductResponse productToDto(Product product);
 
     @Mapping(target = "currentPage", expression = "java(productPage.getNumber() + 1)")
-    ProductPageDto productPageToDto(Page<Product> productPage);
+    ProductPageResponse productPageToDto(Page<Product> productPage);
 }

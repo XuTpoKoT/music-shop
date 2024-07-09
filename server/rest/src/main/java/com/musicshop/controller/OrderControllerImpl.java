@@ -1,7 +1,10 @@
 package com.musicshop.controller;
 
+import com.musicshop.dto.request.SetOrderStatusRequest;
 import com.musicshop.dto.MakeOrderDto;
+import com.musicshop.dto.request.MakeOrderRequest;
 import com.musicshop.dto.response.OrderPageResponse;
+import com.musicshop.dto.response.OrderResponse;
 import com.musicshop.entity.AppUser;
 import com.musicshop.entity.Order;
 import com.musicshop.entity.OrderItem;
@@ -22,22 +25,21 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
-@Controller
+@Validated
+@RestController
 @RequiredArgsConstructor
-@RequestMapping("/${api-version}/orders")
 @Slf4j
-public class OrderController {
+public class OrderControllerImpl implements OrderController {
     private final OrderService orderService;
     private final CartItemRepo cartItemRepo;
     private final OrderRepo orderRepo;
@@ -45,8 +47,7 @@ public class OrderController {
     private final CartItemMapper cartItemMapper;
     private final OrderMapper orderMapper;
 
-    @GetMapping("/{id}")
-    public String getOrder(@PathVariable UUID id, Model model) {
+    public OrderResponse getOrderById(@PathVariable UUID id) {
         log.info("getOrder called with id " + id);
         Order order = orderRepo.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Order " + id + " not found")
@@ -57,51 +58,29 @@ public class OrderController {
                 appUser.getId())) {
             throw new AccessForbiddenException();
         }
-        model.addAttribute("order", order);
-        return "order";
+        return orderMapper.orderToDto(order);
     }
 
-    @GetMapping
     @PreAuthorize("#login == authentication.name")
-    public String getOrdersByLogin(@RequestParam String login,
-                                   @RequestParam(name = "pageNumber", defaultValue = "1") @Min(1) int pageNumber,
-                                   @RequestParam(name = "pageSize", defaultValue = "${defaultPageSize}") @Min(1) int pageSize,
-                                   Model model) {
+    public OrderPageResponse getOrdersByLogin(@RequestParam String login,
+                                              @RequestParam(defaultValue = "1") @Min(1) int pageNumber,
+                                              @RequestParam(defaultValue = "${defaultPageSize}") @Min(1) int pageSize) {
         log.info("getOrders called with login " + login);
         SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         AppUser appUser = securityUser.getAppUser();
         Page<Order> orderPage = new PageImpl<>(new ArrayList<>());
         switch (appUser.getRole()) {
-            case CUSTOMER -> {
-                orderPage = orderRepo.findByCustomerId(appUser.getId(), PageRequest.of(pageNumber - 1, pageSize));
-            } case EMPLOYEE -> {
-                orderPage = orderRepo.findByEmployeeId(appUser.getId(), PageRequest.of(pageNumber - 1, pageSize));
-            }
+            case CUSTOMER -> orderPage = orderRepo.findByCustomerId(appUser.getId(),
+                    PageRequest.of(pageNumber - 1, pageSize));
+            case EMPLOYEE -> orderPage = orderRepo.findByEmployeeId(appUser.getId(),
+                    PageRequest.of(pageNumber - 1, pageSize));
         }
-        OrderPageResponse orderPageResponse = orderMapper.orderPageToDto(orderPage);
-        model.addAttribute("orderPage", orderPageResponse);
-
-        return "orders";
+        return orderMapper.orderPageToDto(orderPage);
     }
 
-    @PatchMapping("/{id}")
-    public String setOrderStatus(@PathVariable UUID id,
-                                 @RequestParam String orderStatus) {
-        log.info("setOrderStatus called with order id " + id);
-        Order order = orderRepo.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Order " + id + " not found")
-        );
-        order.setStatus(Order.Status.valueOf(orderStatus));
-        orderRepo.save(order);
-        return "redirect:/v1/orders/" + id;
-    }
-
-    @PostMapping
     @PreAuthorize("#login == authentication.name")
-    public String makeOrder(@RequestParam String login,
-                            @RequestParam UUID pickUpPointId,
-                            @RequestParam(name = "customer", required = false) Integer customerId,
-                            @RequestParam(required = false) boolean needSpendBonuses) {
+    public void makeOrder(@RequestParam String login,
+                          @RequestBody MakeOrderRequest makeOrderRequest) {
         log.info("makeOrder called with login " + login);
         SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         AppUser appUser = userRepo.findById(securityUser.getAppUser().getId()).orElseThrow(
@@ -110,7 +89,7 @@ public class OrderController {
         AppUser customer = appUser;
         Integer employeeId = null;
         if (appUser.getRole() == AppUser.Role.EMPLOYEE) {
-            customer = userRepo.findById(customerId).orElse(null);
+            customer = userRepo.findById(makeOrderRequest.customerId()).orElse(null);
             employeeId = appUser.getId();
         }
         List<OrderItem> orderItems = cartItemMapper.cartItemsToOrderItems(
@@ -120,13 +99,21 @@ public class OrderController {
                 .employeeId(employeeId)
                 .customer(customer)
                 .timestamp(ZonedDateTime.now().withZoneSameLocal(ZoneId.of("UTC")))
-                .pickUpPointId(pickUpPointId)
-                .needSpendBonuses(needSpendBonuses)
+                .pickUpPointId(makeOrderRequest.pickUpPointId())
+                .needSpendBonuses(makeOrderRequest.needSpendBonuses())
                 .orderItems(orderItems)
                 .status(Order.Status.formed)
                 .build();
         orderService.makeOrder(makeOrderDto);
+    }
 
-        return "redirect:/v1/products";
+    public void setOrderStatus(@PathVariable UUID id,
+                               @RequestBody SetOrderStatusRequest request) {
+        log.info("setOrderStatus called with order id " + id);
+        Order order = orderRepo.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Order " + id + " not found")
+        );
+        order.setStatus(request.status());
+        orderRepo.save(order);
     }
 }
