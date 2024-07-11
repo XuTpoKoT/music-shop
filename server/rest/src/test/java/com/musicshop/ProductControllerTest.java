@@ -14,13 +14,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Sql(scripts = "classpath:db/products.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-public class ProductControllerE2ETest extends E2ETest {
+@Sql(scripts = "classpath:db/products.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "classpath:db/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+public class ProductControllerTest extends ControllerTest {
     private final ObjectMapper objectMapper;
     private final MockMvc mvc;
 
     @Autowired
-    public ProductControllerE2ETest(ObjectMapper objectMapper, MockMvc mvc) {
+    public ProductControllerTest(ObjectMapper objectMapper, MockMvc mvc) {
         this.objectMapper = objectMapper;
         this.mvc = mvc;
     }

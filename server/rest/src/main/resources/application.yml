@@ -10,6 +10,7 @@ spring:
       hibernate:
         default_schema: public
     show-sql: true
+    open-in-view: false
 server:
   port:
     ${API_PORT:8095}

@@ -10,6 +10,7 @@ import com.musicshop.mapper.CartItemMapper;
 import com.musicshop.repo.CartItemRepo;
 import com.musicshop.repo.ProductRepo;
 import com.musicshop.security.SecurityUser;
+import com.musicshop.security.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class CartControllerImpl implements CartController {
     @PreAuthorize("#login == authentication.name")
     public List<CartItemResponse> getProductsInCart(@PathVariable String login) {
         log.info("getProductsInCart called with login " + login);
-        SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SecurityUser securityUser = SecurityUtils.getSecurityUser();
         List<CartItem> cartItems = cartItemRepo.findByUserId(securityUser.getAppUser().getId());
         return cartItemMapper.cartItemsToDto(cartItems);
     }
@@ -43,7 +44,7 @@ public class CartControllerImpl implements CartController {
     public void addProductToCart(@PathVariable String login, @Valid @RequestBody AddProductToCartRequest request) {
         UUID productId = request.productId();
         log.info("addProductToCart called with login " + login + " and product " + productId);
-        SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SecurityUser securityUser = SecurityUtils.getSecurityUser();
         AppUser appUser = securityUser.getAppUser();
         Product product = productRepo.findById(productId).orElseThrow(() ->
                 new EntityNotFoundException("Product " + productId + " not found"));

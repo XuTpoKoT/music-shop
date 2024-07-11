@@ -6,7 +6,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
-public class PostgreSQLContainerTest {
+abstract class PostgreSQLContainerTest {
     @Container
     @ServiceConnection
     static PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:15.5");

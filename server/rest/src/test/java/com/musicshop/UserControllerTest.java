@@ -12,13 +12,14 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Sql(scripts = "classpath:db/users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-public class UserControllerE2ETest extends E2ETest {
+@Sql(scripts = "classpath:db/users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "classpath:db/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+public class UserControllerTest extends ControllerTest {
     private final ObjectMapper objectMapper;
     private final MockMvc mvc;
 
     @Autowired
-    public UserControllerE2ETest(ObjectMapper objectMapper, MockMvc mvc) {
+    public UserControllerTest(ObjectMapper objectMapper, MockMvc mvc) {
         this.objectMapper = objectMapper;
         this.mvc = mvc;
     }

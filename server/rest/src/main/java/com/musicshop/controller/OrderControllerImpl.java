@@ -15,6 +15,7 @@ import com.musicshop.repo.CartItemRepo;
 import com.musicshop.repo.OrderRepo;
 import com.musicshop.repo.UserRepo;
 import com.musicshop.security.SecurityUser;
+import com.musicshop.security.SecurityUtils;
 import com.musicshop.service.OrderService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.Min;
@@ -49,7 +50,7 @@ public class OrderControllerImpl implements OrderController {
 
     public OrderResponse getOrderById(@PathVariable UUID id) {
         log.info("getOrder called with id " + id);
-        Order order = orderRepo.findById(id).orElseThrow(
+        Order order = orderRepo.findDetailedById(id).orElseThrow(
                 () -> new EntityNotFoundException("Order " + id + " not found")
         );
         SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -82,7 +83,7 @@ public class OrderControllerImpl implements OrderController {
     public void makeOrder(@RequestParam String login,
                           @RequestBody MakeOrderRequest makeOrderRequest) {
         log.info("makeOrder called with login " + login);
-        SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SecurityUser securityUser = SecurityUtils.getSecurityUser();
         AppUser appUser = userRepo.findById(securityUser.getAppUser().getId()).orElseThrow(
                 () -> new EntityNotFoundException("User " + securityUser.getAppUser().getId() + " not found")
         );

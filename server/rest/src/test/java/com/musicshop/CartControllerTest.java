@@ -16,15 +16,16 @@ import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Sql(scripts = "classpath:db/products.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-@Sql(scripts = "classpath:db/users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-@Sql(scripts = "classpath:db/cart.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-public class CartControllerE2ETest extends E2ETest {
+@Sql(scripts = "classpath:db/products.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "classpath:db/users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "classpath:db/cart.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "classpath:db/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+public class CartControllerTest extends ControllerTest {
     private final ObjectMapper objectMapper;
     private final MockMvc mvc;
 
     @Autowired
-    public CartControllerE2ETest(ObjectMapper objectMapper, MockMvc mvc) {
+    public CartControllerTest(ObjectMapper objectMapper, MockMvc mvc) {
         this.objectMapper = objectMapper;
         this.mvc = mvc;
     }

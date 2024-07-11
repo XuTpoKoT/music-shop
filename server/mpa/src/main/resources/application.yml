@@ -13,6 +13,7 @@ spring:
       hibernate:
         default_schema: public
     show-sql: true
+    open-in-view: false
   mvc:
     hiddenmethod:
       filter:

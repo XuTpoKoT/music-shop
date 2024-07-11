@@ -10,6 +10,13 @@ spring:
       hibernate:
         default_schema: public
     show-sql: true
+    open-in-view: false
+api-version: "v2"
 bonuses:
   max-spend-percent: 30
   accrued-percent: 5
+defaultPageSize: 6
+
+logging:
+  level:
+    org.springframework: DEBUG

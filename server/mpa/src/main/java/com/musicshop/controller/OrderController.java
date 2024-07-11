@@ -12,6 +12,7 @@ import com.musicshop.repo.CartItemRepo;
 import com.musicshop.repo.OrderRepo;
 import com.musicshop.repo.UserRepo;
 import com.musicshop.security.SecurityUser;
+import com.musicshop.security.SecurityUtils;
 import com.musicshop.service.OrderService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.Min;
@@ -51,7 +52,7 @@ public class OrderController {
         Order order = orderRepo.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Order " + id + " not found")
         );
-        SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SecurityUser securityUser = SecurityUtils.getSecurityUser();
         AppUser appUser = securityUser.getAppUser();
         if (appUser.getRole() == AppUser.Role.CUSTOMER && !Objects.equals(order.getCustomer().getId(),
                 appUser.getId())) {
@@ -68,7 +69,7 @@ public class OrderController {
                                    @RequestParam(name = "pageSize", defaultValue = "${defaultPageSize}") @Min(1) int pageSize,
                                    Model model) {
         log.info("getOrders called with login " + login);
-        SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SecurityUser securityUser = SecurityUtils.getSecurityUser();
         AppUser appUser = securityUser.getAppUser();
         Page<Order> orderPage = new PageImpl<>(new ArrayList<>());
         switch (appUser.getRole()) {
@@ -103,7 +104,7 @@ public class OrderController {
                             @RequestParam(name = "customer", required = false) Integer customerId,
                             @RequestParam(required = false) boolean needSpendBonuses) {
         log.info("makeOrder called with login " + login);
-        SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SecurityUser securityUser = SecurityUtils.getSecurityUser();
         AppUser appUser = userRepo.findById(securityUser.getAppUser().getId()).orElseThrow(
                 () -> new EntityNotFoundException("User " + securityUser.getAppUser().getId() + " not found")
         );

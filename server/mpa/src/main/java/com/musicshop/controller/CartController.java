@@ -9,12 +9,12 @@ import com.musicshop.repo.CartItemRepo;
 import com.musicshop.repo.PickUpPointRepo;
 import com.musicshop.repo.ProductRepo;
 import com.musicshop.security.SecurityUser;
+import com.musicshop.security.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,14 +36,12 @@ public class CartController {
     @PreAuthorize("#login == authentication.name")
     public String getProductsInCart(@PathVariable String login, Model model) {
         log.info("getProductsInCart called with login " + login);
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof SecurityUser securityUser) {
-            AppUser appUser = securityUser.getAppUser();
-            List<CartItem> cartItems = cartItemRepo.findByUserId(appUser.getId());
-            model.addAttribute("cartItems", cartItemMapper.cartItemsToDto(cartItems));
-            List<PickUpPoint> pickUpPoints = pickUpPointRepo.findAll();
-            model.addAttribute("pickUpPoints", pickUpPoints);
-        }
+        SecurityUser securityUser = SecurityUtils.getSecurityUser();
+        AppUser appUser = securityUser.getAppUser();
+        List<CartItem> cartItems = cartItemRepo.findByUserId(appUser.getId());
+        model.addAttribute("cartItems", cartItemMapper.cartItemsToDto(cartItems));
+        List<PickUpPoint> pickUpPoints = pickUpPointRepo.findAll();
+        model.addAttribute("pickUpPoints", pickUpPoints);
 
         return "cart";
     }
@@ -53,13 +51,11 @@ public class CartController {
     public String addProductToCart(@PathVariable String login,
                                    @RequestParam UUID productId) {
         log.info("addProductToCart called with login " + login + " and product " + productId);
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof SecurityUser securityUser) {
-            AppUser appUser = securityUser.getAppUser();
-            Product product = productRepo.findById(productId).orElseThrow(() ->
-                    new EntityNotFoundException("Product " + productId + " not found"));
-            cartItemRepo.saveOnConflictIgnore(new CartItem(appUser.getId(), product, 1));
-        }
+        SecurityUser securityUser = SecurityUtils.getSecurityUser();
+        AppUser appUser = securityUser.getAppUser();
+        Product product = productRepo.findById(productId).orElseThrow(() ->
+                new EntityNotFoundException("Product " + productId + " not found"));
+        cartItemRepo.saveOnConflictIgnore(new CartItem(appUser.getId(), product, 1));
 
         return "redirect:/v1/products";
     }
