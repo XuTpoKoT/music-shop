@@ -1,7 +1,7 @@
 package com.musicshop.controller;
 
-import com.musicshop.error.ErrorDescription;
 import com.musicshop.dto.response.UserInfoResponse;
+import com.musicshop.error.ErrorDescription;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

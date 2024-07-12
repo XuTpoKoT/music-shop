@@ -13,21 +13,12 @@ spring:
     open-in-view: false
 server:
   port:
-    ${API_PORT:8095}
-#  servlet:
-#    session:
-#      tracking-modes: cookie
-
+    ${API_PORT:8091}
 api-version:
   "v2"
-openapi:
-  dev-url:
-    "http://localhost:8090"
-
 springdoc:
   swagger-ui:
-    path:
-      "/swagger-ui"
+    path: "/${api-version}/swagger-ui"
     tryItOutEnabled: true
     operationsSorter: method
     tagsSorter: alpha
@@ -39,11 +30,6 @@ springdoc:
     "com.musicshop.controller"
   show-login-endpoint:
     true
-
-token:
-  signing:
-    key: 53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855
-
 logging:
   level:
     org.springframework.web: INFO
@@ -55,6 +41,7 @@ logging:
   file:
     name: "my.log"
 
+token-signing-key: ${SIGNING_KEY:53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855}
 bonuses:
   max-spend-percent: 30
   accrued-percent: 5

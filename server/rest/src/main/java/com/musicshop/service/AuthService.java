@@ -1,6 +1,5 @@
 package com.musicshop.service;
 
-import com.musicshop.security.SecurityUser;
 import com.musicshop.dto.request.SignInRequest;
 import com.musicshop.dto.request.SignUpRequest;
 import com.musicshop.dto.response.JwtAuthenticationResponse;
@@ -8,6 +7,7 @@ import com.musicshop.entity.AppUser;
 import com.musicshop.error.AccessForbiddenException;
 import com.musicshop.error.OccupiedLoginException;
 import com.musicshop.repo.UserRepo;
+import com.musicshop.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;

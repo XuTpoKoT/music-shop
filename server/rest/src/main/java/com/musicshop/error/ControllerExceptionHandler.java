@@ -6,6 +6,7 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.validation.FieldError;
@@ -47,7 +48,7 @@ public class ControllerExceptionHandler {
         return new ErrorDescription(ex.getClass().getName(), ex.getMessage());
     }
 
-    @ExceptionHandler(value = {AccessForbiddenException.class})
+    @ExceptionHandler(value = {AccessForbiddenException.class, AccessDeniedException.class})
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     public ErrorDescription resourceForbidden(RuntimeException ex) {
         return new ErrorDescription(ex.getClass().getName(), ex.getMessage());
