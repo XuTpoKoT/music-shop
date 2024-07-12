@@ -1,7 +1,7 @@
 package com.musicshop.mapper;
 
 
-import com.musicshop.dto.CartItemResponse;
+import com.musicshop.dto.response.CartItemResponse;
 import com.musicshop.entity.CartItem;
 import com.musicshop.entity.OrderItem;
 import org.mapstruct.Mapper;

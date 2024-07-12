@@ -1,0 +1,11 @@
+FROM gradle:8.6 as BUILD
+WORKDIR /app
+COPY build.gradle settings.gradle /app/
+COPY core /app/core
+COPY mpa /app/mpa
+RUN gradle :mpa:bootJar
+
+FROM openjdk:17-jdk-slim
+ARG JAR_NAME=mpa-1.0.jar
+COPY --from=BUILD /app/mpa/build/libs/${JAR_NAME} /app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]

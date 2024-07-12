@@ -1,7 +1,10 @@
 package com.musicshop.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -36,6 +39,7 @@ public class Order {
     private ZonedDateTime timestamp;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Setter
     private Status status;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pickup_point_id", nullable = false)

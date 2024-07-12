@@ -1,6 +1,6 @@
 package com.musicshop.controller;
 
-import com.musicshop.dto.ProductPageDto;
+import com.musicshop.dto.response.ProductPageResponse;
 import com.musicshop.entity.Product;
 import com.musicshop.mapper.ProductMapper;
 import com.musicshop.repo.ProductRepo;
@@ -33,7 +33,7 @@ public class ProductController {
                                           @RequestParam(name = "pageSize", defaultValue = "${defaultPageSize}")
                                           @Min(1) int pageSize, Model model) {
         Page<Product> productPage = productRepo.findAll(PageRequest.of(pageNumber - 1, pageSize));
-        ProductPageDto productDtoPage = productMapper.productPageToDto(productPage);
+        ProductPageResponse productDtoPage = productMapper.productPageToDto(productPage);
         model.addAttribute("paginationProducts", productDtoPage);
 
         return "home";

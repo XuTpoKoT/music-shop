@@ -21,7 +21,9 @@
       <th>Оплачено бонусами</th>
     </tr>
     <tr th:each="order : ${orderPage.content()}">
-      <td th:utext="${order.id}"></td>
+      <td>
+        <a th:href="@{/v1/orders/{id}(id=${order.id})}" th:utext="${order.id()}"></a>
+      </td>
       <td th:utext="${#temporals.format(order.timestamp,'dd-MM-yyyy HH:mm')}"></td>
       <td th:utext="${order.pickUpPointAddress}"></td>
       <td th:utext="${order.customerUsername()}"></td>

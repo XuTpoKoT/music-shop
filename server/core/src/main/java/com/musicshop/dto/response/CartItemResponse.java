@@ -1,4 +1,4 @@
-package com.musicshop.dto;
+package com.musicshop.dto.response;
 
 import java.util.UUID;
 

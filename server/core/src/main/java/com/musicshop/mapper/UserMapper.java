@@ -1,7 +1,7 @@
 package com.musicshop.mapper;
 
 
-import com.musicshop.dto.UserInfoResponse;
+import com.musicshop.dto.response.UserInfoResponse;
 import com.musicshop.entity.AppUser;
 import org.mapstruct.Mapper;
 

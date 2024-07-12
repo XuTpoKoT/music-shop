@@ -38,6 +38,8 @@ public class WebSecurityConfig {
                             .permitAll()
                         .requestMatchers(apiPrefix + "/auth/sign-up")
                             .anonymous()
+                        .requestMatchers(HttpMethod.PATCH, "/orders/*")
+                            .hasAuthority("EMPLOYEE")
                         .anyRequest()
                             .authenticated()
                 )

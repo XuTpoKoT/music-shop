@@ -1,6 +1,7 @@
 package com.musicshop.repo;
 
 import com.musicshop.entity.CartItem;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CartItemRepo extends JpaRepository<CartItem, UUID> {
+    @EntityGraph(attributePaths = {"product"})
     List<CartItem> findByUserId(Integer id);
     @Modifying
     @Transactional

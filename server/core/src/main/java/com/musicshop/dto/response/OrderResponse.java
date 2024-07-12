@@ -1,11 +1,11 @@
-package com.musicshop.dto;
+package com.musicshop.dto.response;
 
 import com.musicshop.entity.Order;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-public record OrderDto (
+public record OrderResponse(
     UUID id,
     String customerUsername,
     ZonedDateTime timestamp,
