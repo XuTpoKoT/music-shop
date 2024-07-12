@@ -19,8 +19,11 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Run tests
+    - name: Core tests
       run: cd server && ./gradlew :core:test
+
+    - name: Rest tests
+      run: cd server && ./gradlew :rest:test
   deploy:
     needs: test
     runs-on: ubuntu-latest
@@ -40,3 +43,11 @@ jobs:
             git checkout main;
             ls -a;
             git pull;
+            echo '--- DOCKER OPERATIONS ---';
+            docker-compose down;
+            echo '--- LIST OF DOCKER CONTAINERS AFTER STOPING DOCKER CONTAINERS ---';
+            docker ps;
+            docker-compose --file docker-compose.prod.yml up -d;
+            docker system prune --all --force;
+            echo '--- LIST OF DOCKER CONTAINERS AFTER STARTING DOCKER CONTAINERS ---';
+            docker ps;
