@@ -47,8 +47,7 @@ jobs:
             echo '--- DOCKER OPERATIONS ---';
             docker compose down;
             echo '--- LIST OF DOCKER CONTAINERS AFTER STOPING DOCKER CONTAINERS ---';
-            docker ps -a;
+            docker ps;
             docker compose --file docker-compose.prod.yml --env-file .env.prod up -d --build;
-            docker system prune --all --force;
             echo '--- LIST OF DOCKER CONTAINERS AFTER STARTING DOCKER CONTAINERS ---';
             docker ps;
