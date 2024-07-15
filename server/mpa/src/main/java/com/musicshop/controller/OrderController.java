@@ -49,7 +49,7 @@ public class OrderController {
     @GetMapping("/{id}")
     public String getOrder(@PathVariable UUID id, Model model) {
         log.info("getOrder called with id " + id);
-        Order order = orderRepo.findById(id).orElseThrow(
+        Order order = orderRepo.findDetailedById(id).orElseThrow(
                 () -> new EntityNotFoundException("Order " + id + " not found")
         );
         SecurityUser securityUser = SecurityUtils.getSecurityUser();
