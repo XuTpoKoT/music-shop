@@ -26,6 +26,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -83,6 +84,7 @@ public class OrderControllerImpl implements OrderController {
     }
 
     @PreAuthorize("#login == authentication.name")
+    @Transactional
     public void makeOrder(@RequestParam String login,
                           @RequestBody MakeOrderRequest makeOrderRequest) {
         log.info("makeOrder called with login " + login);
