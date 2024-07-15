@@ -12,6 +12,7 @@ spring:
     show-sql: true
     open-in-view: false
 server:
+  ip: ${SERVER_IP:localhost}
   port:
     ${API_PORT:8091}
 api-version:

@@ -17,11 +17,13 @@ public class OpenAPIConfig {
 
     @Value("${server.port}")
     private String port;
+    @Value("${server.ip}")
+    private String host;
 
     @Bean
     public OpenAPI myOpenAPI() {
         Server server = new Server();
-        server.setUrl("http://localhost:" + port);
+        server.setUrl("http://" + host + ":" + port);
 
         Info info = new Info()
                 .title("Music Shop API")
