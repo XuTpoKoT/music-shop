@@ -22,8 +22,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -99,6 +99,7 @@ public class OrderController {
 
     @PostMapping
     @PreAuthorize("#login == authentication.name")
+    @Transactional
     public String makeOrder(@RequestParam String login,
                             @RequestParam UUID pickUpPointId,
                             @RequestParam(name = "customer", required = false) Integer customerId,
