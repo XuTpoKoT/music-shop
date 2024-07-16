@@ -16,6 +16,7 @@
 - Spring Framework (Boot, MVC, Security, Data)
 - Thymeleaf
 - PostgreSQL
+- Liquibase
 - JUnit
 - Test Containers
 - CI/CD
