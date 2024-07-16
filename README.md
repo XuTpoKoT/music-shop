@@ -18,6 +18,7 @@
 - PostgreSQL
 - JUnit
 - Test Containers
+- CI/CD
    
 <a name="use"></a>
 ## Use-Case диаграмма
@@ -66,7 +67,11 @@ http://213.226.126.69:8085/v1/products.
 
 <a name="deploy_rest"></a>
 ## Деплой REST API
-http://213.226.126.69:8086/v2/swagger-ui.
+Swagger:
+http://213.226.126.69:8086/v2/swagger-ui
+
+Open-api:
+http://213.226.126.69:8086/v2/api-docs
 
 <a name="mpa"></a>
 ## Дизайн MPA версии приложения
