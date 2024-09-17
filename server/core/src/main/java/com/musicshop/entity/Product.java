@@ -27,6 +27,9 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "manufacturer_id")
     private Manufacturer manufacturer;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
     private String imgRef;
     @Type(JsonType.class)
     private Map<String, String> characteristics;

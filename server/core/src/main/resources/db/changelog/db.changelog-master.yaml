@@ -17,3 +17,7 @@ databaseChangeLog:
       file: db/changelog/2024-06-23-1910_orders-create.yaml
   - include:
       file: db/changelog/2024-06-23-1920_order-items-create.yaml
+  - include:
+      file: db/changelog/2024-09-17-0928_categories-create.yaml
+  - include:
+      file: db/changelog/2024-09-17-0931_products-add-category-column.yaml

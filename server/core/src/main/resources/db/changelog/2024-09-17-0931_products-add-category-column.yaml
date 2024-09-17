@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 11
+      author: Dmitriy Morozov
+      changes:
+        - addColumn:
+            tableName: products
+            columns:
+              - column:
+                  name: category_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_products_c
+                    referencedTableName: categories
+                    referencedColumnNames: id
