@@ -60,6 +60,18 @@ def genManufactures():
             id = uuid4()
             writer.writerow({'id': id, 'name': name})
 
+def genCategories():
+    names = [line.strip() for line in open("txt/categories.txt", "r")]
+
+    with open(csvDirPath + 'categories.csv', 'w', newline='') as csvfile:
+        fieldnames = ['id', 'name']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+
+        for name in names:
+            id = uuid4()
+            writer.writerow({'id': id, 'name': name})
+
 def genProducts():    
     def genProductValues(fieldValues):
         def genProductName(manufacturer):
@@ -95,23 +107,25 @@ def genProducts():
             fieldValues['img_ref'] = "https://muzakkord.ru/wa-data/public/shop/products/87/96/489687/images/136026/136026.750x0.jpg"
 
         manufacturer = choice(manufacturers)
-        category = choice(['Гитары', 'Синтезаторы'])
+        category = choice(categories)
 
         fieldValues['id'] = uuid4()
         fieldValues['name'] = genProductName(manufacturer['name'])
-        fieldValues['description'] = genDescription(category)
+        fieldValues['description'] = genDescription(category['name'])
         fieldValues['price'] = randint(5000, 90000) // 500 * 500
         # fieldValues['storage_cnt'] = randint(1, 20)
         fieldValues['color'] = choice(colors)
-        fieldValues['manufacturer_id'] = manufacturer['id']        
+        fieldValues['manufacturer_id'] = manufacturer['id']
+        fieldValues['category_id'] = category['id']
 
-        if category == 'Гитары':
+        if category['name'] == 'Гитары':
             genGuitarCharacteristics(fieldValues)
-        elif category == 'Синтезаторы':
+        elif category['name'] == 'Синтезаторы':
             genSynthesizerCharacteristics(fieldValues)            
 
     cntRecords = 50
     manufacturers = readIdsNamesCsv(csvDirPath + 'manufacturers.csv')
+    categories = readIdsNamesCsv(csvDirPath + 'categories.csv')
     colors = [line.strip() for line in open("txt/colors.txt", "r")]
     materials = [line.strip() for line in open("txt/materials.txt", "r")]
 
@@ -119,7 +133,7 @@ def genProducts():
         print(m)
 
     with open(csvDirPath + 'products.csv', 'w', newline='') as csvfile:
-        fieldNames = ['id', 'name', 'price', 'description', 'color', 'img_ref', 'manufacturer_id', 'characteristics']
+        fieldNames = ['id', 'name', 'price', 'description', 'color', 'img_ref', 'manufacturer_id', 'characteristics', 'category_id']
         writer = csv.DictWriter(csvfile, fieldnames=fieldNames)
         writer.writeheader()
 
@@ -224,4 +238,5 @@ if __name__ == "__main__":
     fake = Faker()
     # genDeliveryPoints()
     genManufactures()
+    genCategories()
     genProducts()
