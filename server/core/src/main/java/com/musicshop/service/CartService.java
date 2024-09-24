@@ -1,7 +1,6 @@
 package com.musicshop.service;
 
 import com.musicshop.entity.CartItem;
-import jakarta.persistence.criteria.CriteriaBuilder;
 
 import java.util.List;
 import java.util.UUID;

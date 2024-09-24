@@ -4,4 +4,5 @@ import com.musicshop.entity.AppUser;
 
 public interface UserService {
     AppUser findByUsername(String login);
+    AppUser findById(Integer id);
 }

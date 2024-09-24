@@ -13,7 +13,7 @@ import com.musicshop.repo.OrderRepo;
 import com.musicshop.repo.UserRepo;
 import com.musicshop.security.SecurityUser;
 import com.musicshop.security.SecurityUtils;
-import com.musicshop.service.OrderService;
+import com.musicshop.service.OrderServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +39,7 @@ import java.util.UUID;
 @RequestMapping("/${api-version}/orders")
 @Slf4j
 public class OrderController {
-    private final OrderService orderService;
+    private final OrderServiceImpl orderService;
     private final CartItemRepo cartItemRepo;
     private final OrderRepo orderRepo;
     private final UserRepo userRepo;

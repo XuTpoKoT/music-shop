@@ -16,4 +16,11 @@ public class UserServiceImpl implements UserService {
                 () -> new EntityNotFoundException("User " + login + " not found")
         );
     }
+
+    @Override
+    public AppUser findById(Integer id) {
+        return userRepo.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("User " + id + " not found")
+        );
+    }
 }

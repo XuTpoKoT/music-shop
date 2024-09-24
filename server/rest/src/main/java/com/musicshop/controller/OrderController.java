@@ -20,27 +20,6 @@ import java.util.UUID;
 @Tag(name = "orders")
 @RequestMapping("/${api-version}/orders")
 public interface OrderController {
-    @Operation(summary = "Получение заказа по ID")
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = OrderResponse.class))}),
-            @ApiResponse(
-                    responseCode = "401",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorDescription.class))}),
-            @ApiResponse(
-                    responseCode = "404",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorDescription.class))}),
-            @ApiResponse(
-                    responseCode = "503",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorDescription.class))})
-    })
-    @GetMapping("/{id}")
-    OrderResponse getOrderById(@PathVariable UUID id);
 
     @Operation(summary = "Получение заказов по логину")
     @ApiResponses({

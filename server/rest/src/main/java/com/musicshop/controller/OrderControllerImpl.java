@@ -16,7 +16,9 @@ import com.musicshop.repo.OrderRepo;
 import com.musicshop.repo.UserRepo;
 import com.musicshop.security.SecurityUser;
 import com.musicshop.security.SecurityUtils;
+import com.musicshop.service.CartService;
 import com.musicshop.service.OrderService;
+import com.musicshop.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -46,25 +48,10 @@ import java.util.UUID;
 @Slf4j
 public class OrderControllerImpl implements OrderController {
     private final OrderService orderService;
-    private final CartItemRepo cartItemRepo;
-    private final OrderRepo orderRepo;
-    private final UserRepo userRepo;
+    private final CartService cartService;
+    private final UserService userService;
     private final CartItemMapper cartItemMapper;
     private final OrderMapper orderMapper;
-
-    public OrderResponse getOrderById(@PathVariable UUID id) {
-        log.info("getOrder called with id " + id);
-        Order order = orderRepo.findDetailedById(id).orElseThrow(
-                () -> new EntityNotFoundException("Order " + id + " not found")
-        );
-        SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        AppUser appUser = securityUser.getAppUser();
-        if (appUser.getRole() == AppUser.Role.CUSTOMER && !Objects.equals(order.getCustomer().getId(),
-                appUser.getId())) {
-            throw new AccessForbiddenException();
-        }
-        return orderMapper.orderToDto(order);
-    }
 
     @PreAuthorize("#login == authentication.name")
     public OrderPageResponse getOrdersByLogin(@RequestParam String login,
@@ -75,9 +62,9 @@ public class OrderControllerImpl implements OrderController {
         AppUser appUser = securityUser.getAppUser();
         Page<Order> orderPage = new PageImpl<>(new ArrayList<>());
         switch (appUser.getRole()) {
-            case CUSTOMER -> orderPage = orderRepo.findByCustomerId(appUser.getId(),
+            case CUSTOMER -> orderPage = orderService.findByCustomerId(appUser.getId(),
                     PageRequest.of(pageNumber - 1, pageSize));
-            case EMPLOYEE -> orderPage = orderRepo.findByEmployeeId(appUser.getId(),
+            case EMPLOYEE -> orderPage = orderService.findByEmployeeId(appUser.getId(),
                     PageRequest.of(pageNumber - 1, pageSize));
         }
         return orderMapper.orderPageToDto(orderPage);
@@ -89,17 +76,19 @@ public class OrderControllerImpl implements OrderController {
                           @RequestBody MakeOrderRequest makeOrderRequest) {
         log.info("makeOrder called with login " + login);
         SecurityUser securityUser = SecurityUtils.getSecurityUser();
-        AppUser appUser = userRepo.findById(securityUser.getAppUser().getId()).orElseThrow(
-                () -> new EntityNotFoundException("User " + securityUser.getAppUser().getId() + " not found")
-        );
+        AppUser appUser = userService.findById(securityUser.getAppUser().getId());
         AppUser customer = appUser;
         Integer employeeId = null;
         if (appUser.getRole() == AppUser.Role.EMPLOYEE) {
-            customer = userRepo.findById(makeOrderRequest.customerId()).orElse(null);
+            try {
+                customer = userService.findById(makeOrderRequest.customerId());
+            } catch (EntityNotFoundException e) {
+                customer = null;
+            }
             employeeId = appUser.getId();
         }
         List<OrderItem> orderItems = cartItemMapper.cartItemsToOrderItems(
-                cartItemRepo.findByUserId(appUser.getId()));
+                cartService.findByUserId(appUser.getId()));
 
         MakeOrderDto makeOrderDto = MakeOrderDto.builder()
                 .employeeId(employeeId)
@@ -116,10 +105,6 @@ public class OrderControllerImpl implements OrderController {
     public void setOrderStatus(@PathVariable UUID id,
                                @RequestBody SetOrderStatusRequest request) {
         log.info("setOrderStatus called with order id " + id);
-        Order order = orderRepo.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Order " + id + " not found")
-        );
-        order.setStatus(request.status());
-        orderRepo.save(order);
+        orderService.updateOrder(id, request.status());
     }
 }

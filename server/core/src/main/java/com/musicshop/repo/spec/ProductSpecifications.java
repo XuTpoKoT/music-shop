@@ -1,6 +1,5 @@
 package com.musicshop.repo.spec;
 
-import com.musicshop.entity.Category;
 import com.musicshop.entity.Product;
 import org.springframework.data.jpa.domain.Specification;
 
