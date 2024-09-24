@@ -11,6 +11,8 @@ import com.musicshop.repo.CartItemRepo;
 import com.musicshop.repo.ProductRepo;
 import com.musicshop.security.SecurityUser;
 import com.musicshop.security.SecurityUtils;
+import com.musicshop.service.CartService;
+import com.musicshop.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,15 +29,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class CartControllerImpl implements CartController {
-    private final CartItemRepo cartItemRepo;
-    private final ProductRepo productRepo;
+    private final CartService cartService;
+    private final ProductService productService;
     private final CartItemMapper cartItemMapper;
 
     @PreAuthorize("#login == authentication.name")
     public List<CartItemResponse> getProductsInCart(@PathVariable String login) {
         log.info("getProductsInCart called with login " + login);
         SecurityUser securityUser = SecurityUtils.getSecurityUser();
-        List<CartItem> cartItems = cartItemRepo.findByUserId(securityUser.getAppUser().getId());
+        List<CartItem> cartItems = cartService.findByUserId(securityUser.getAppUser().getId());
         return cartItemMapper.cartItemsToDto(cartItems);
     }
 
@@ -45,15 +47,14 @@ public class CartControllerImpl implements CartController {
         log.info("addProductToCart called with login " + login + " and product " + productId);
         SecurityUser securityUser = SecurityUtils.getSecurityUser();
         AppUser appUser = securityUser.getAppUser();
-        Product product = productRepo.findById(productId).orElseThrow(() ->
-                new EntityNotFoundException("Product " + productId + " not found"));
-        cartItemRepo.saveOnConflictIgnore(new CartItem(appUser.getId(), product, 1));
+        Product product = productService.findById(productId);
+        cartService.saveOnConflictIgnore(new CartItem(appUser.getId(), product, 1));
     }
 
     @PreAuthorize("#login == authentication.name")
     public void deleteProductFromCart(@PathVariable String login, @PathVariable UUID cartItemId) {
         log.info("deleteProductFromCart called with login " + login + " and cartItemId " + cartItemId);
-        cartItemRepo.deleteById(cartItemId);
+        cartService.deleteById(cartItemId);
     }
 
     @PreAuthorize("#login == authentication.name")
@@ -61,9 +62,6 @@ public class CartControllerImpl implements CartController {
                                     @PathVariable UUID cartItemId,
                                     @Valid @RequestBody UpdateCartItemRequest request) {
         log.info("updateProductInCart called with login " + login + " and cartItemId " + cartItemId);
-        CartItem cartItem = cartItemRepo.findById(cartItemId)
-                .orElseThrow(() -> new EntityNotFoundException("CartItem " + cartItemId + " not found"));
-        cartItem.setCount(request.count());
-        cartItemRepo.save(cartItem);
+        cartService.updateCartItem(cartItemId, request.count());
     }
 }

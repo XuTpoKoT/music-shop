@@ -3,7 +3,7 @@ server:
     ${API_PORT:8081}
 spring:
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/music_shop_db}
+    url: ${DB_URL:jdbc:postgresql://localhost:5434/music_shop_db}
     username: ${DB_USERNAME:dev_user}
     password: ${DB_PASSWORD:234}
   jpa:
