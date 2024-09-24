@@ -41,7 +41,8 @@ public class WebSecurityConfig {
         this.userDetailsService = userDetailsService;
         this.apiPrefix = "/" + apiVersion;
         this.apiVersion = apiVersion;
-        publicUrls = Stream.of("/swagger-ui/**", "/api-docs", "/products", "/products/*").map(s -> (apiPrefix + s)).toList()
+        publicUrls = Stream.of("/swagger-ui/**", "/api-docs", "/products", "/products/*", "/categories")
+                .map(s -> (apiPrefix + s)).toList()
                 .toArray(new String[0]);
     }
 

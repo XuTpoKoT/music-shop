@@ -21,7 +21,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public interface AuthController {
     @Operation(summary = "Регистрация")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", content = { @Content(schema = @Schema()) }),
+            @ApiResponse(responseCode = "201", content = { @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = JwtAuthenticationResponse.class)) }),
             @ApiResponse(
                     responseCode = "400",
                     content = {@Content(mediaType = "application/json",
@@ -35,6 +36,19 @@ public interface AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     JwtAuthenticationResponse signUp(@RequestBody SignUpRequest signUpRequest) throws Exception;
 
+    @Operation(summary = "Авторизация")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", content = { @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = JwtAuthenticationResponse.class))}),
+            @ApiResponse(
+                    responseCode = "400",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDescription.class))}),
+            @ApiResponse(
+                    responseCode = "503",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDescription.class))})
+    })
     @PostMapping("/sign-in")
     JwtAuthenticationResponse signIn(@RequestBody SignInRequest request);
 }

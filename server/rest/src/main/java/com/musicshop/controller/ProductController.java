@@ -1,5 +1,6 @@
 package com.musicshop.controller;
 
+import com.musicshop.dto.request.GetProductsRequest;
 import com.musicshop.dto.response.ProductPageResponse;
 import com.musicshop.dto.response.ProductResponse;
 import com.musicshop.error.ErrorDescription;
@@ -10,10 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -37,10 +35,12 @@ public interface ProductController {
                             schema = @Schema(implementation = ErrorDescription.class))})
     })
     @GetMapping()
-    ProductPageResponse getProductsByPageNumber(
-                                          @RequestParam(name = "pageNumber", defaultValue = "1") @Min(1) int pageNumber,
-                                          @RequestParam(name = "pageSize", defaultValue = "${defaultPageSize}",
-                                                  required = false) @Min(1) int pageSize);
+    ProductPageResponse getProducts(
+            @RequestParam(name = "pageNumber", defaultValue = "1") @Min(1) int pageNumber,
+            @RequestParam(name = "pageSize", defaultValue = "${defaultPageSize}",
+                    required = false) @Min(1) int pageSize,
+            @RequestParam(name = "categoryId", required = false) UUID categoryId,
+            @RequestParam(name = "productPrefix", required = false) String productPrefix);
 
     @Operation(summary = "Получение информации о товаре")
     @ApiResponses({

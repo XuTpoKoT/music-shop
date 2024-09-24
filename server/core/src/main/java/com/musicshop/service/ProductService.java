@@ -7,6 +7,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 public interface ProductService {
-    Page<Product> findAll(Pageable pageable);
+    Page<Product> findAll(Pageable pageable, UUID categoryId, String productPrefix);
     Product findById(UUID id);
 }

@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Tag(name = "users")
-@RequestMapping("/${api-version}/users/{login}/cart")
+@RequestMapping("/${api-version}/users/{login}/cartItems")
 public interface CartController {
 
     @Operation(summary = "Получение корзины")

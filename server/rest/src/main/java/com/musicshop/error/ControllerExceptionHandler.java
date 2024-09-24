@@ -24,7 +24,8 @@ import java.util.List;
 @Slf4j
 public class ControllerExceptionHandler {
 
-    @ExceptionHandler(value = {HttpMessageNotReadableException.class, ConstraintViolationException.class})
+    @ExceptionHandler(value = {HttpMessageNotReadableException.class, ConstraintViolationException.class,
+            WeakPasswordException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorDescription badRequest(RuntimeException ex) {
         return new ErrorDescription(ex.getClass().getName(), ex.getMessage());

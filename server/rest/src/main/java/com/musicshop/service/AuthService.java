@@ -6,6 +6,7 @@ import com.musicshop.dto.response.JwtAuthenticationResponse;
 import com.musicshop.entity.AppUser;
 import com.musicshop.error.AccessForbiddenException;
 import com.musicshop.error.OccupiedLoginException;
+import com.musicshop.error.WeakPasswordException;
 import com.musicshop.repo.UserRepo;
 import com.musicshop.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,9 @@ public class AuthService {
 
     public JwtAuthenticationResponse signUp(SignUpRequest req) {
         try {
+            if (!isPasswordStrong(req.password())) {
+                throw new WeakPasswordException("Слабый пароль!");
+            }
             AppUser appUser = new AppUser(req.username(), passwordEncoder.encode(req.password()),
                     AppUser.Role.CUSTOMER);
             userRepo.save(appUser);
@@ -58,5 +62,13 @@ public class AuthService {
         log.info("Start gen token");
         String jwt = jwtService.generateToken(securityUser, claims);
         return new JwtAuthenticationResponse(jwt);
+    }
+
+    private boolean isPasswordStrong(String password) {
+        log.debug("isPasswordStrong called");
+        return password.length() >= 5
+                && password.matches("(?=.*[0-9]).*")
+                && password.matches("(?=.*[a-z]).*")
+                && password.matches("(?=.*[A-Z]).*");
     }
 }
