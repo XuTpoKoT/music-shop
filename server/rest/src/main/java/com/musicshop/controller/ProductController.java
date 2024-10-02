@@ -1,6 +1,5 @@
 package com.musicshop.controller;
 
-import com.musicshop.dto.request.GetProductsRequest;
 import com.musicshop.dto.response.ProductPageResponse;
 import com.musicshop.dto.response.ProductResponse;
 import com.musicshop.error.ErrorDescription;

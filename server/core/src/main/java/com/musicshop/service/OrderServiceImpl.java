@@ -39,6 +39,7 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public void makeOrder(MakeOrderDto makeOrderDto) {
         AppUser customer = makeOrderDto.customer();
+        System.out.println(customer);
         int initialCost = calcInitialCost(makeOrderDto.orderItems());
         PickUpPoint pickUpPoint = pickUpPointRepo.findById(makeOrderDto.pickUpPointId()).orElseThrow(
                 () -> new EntityNotFoundException("pickUpPoint " + makeOrderDto.pickUpPointId() + " not found"));

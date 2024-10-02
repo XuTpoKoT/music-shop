@@ -1,7 +1,5 @@
 package com.musicshop.controller;
 
-import com.musicshop.dto.request.GetProductsRequest;
-import com.musicshop.dto.request.MakeOrderRequest;
 import com.musicshop.dto.response.ProductPageResponse;
 import com.musicshop.dto.response.ProductResponse;
 import com.musicshop.entity.Product;
@@ -14,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 

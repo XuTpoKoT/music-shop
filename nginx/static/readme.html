@@ -1,0 +1,94 @@
+<h1 id="-">Магазин музыкальных инструментов</h1>
+<h2 id="-">Описание идеи проекта</h2>
+<p>Разработка приложения для автоматизации работы музыкального магазина.</p>
+<h2 id="-">Описание предметной области</h2>
+<p>Предметной областью являются музыкальные инструменты: гитары и синтезаторы.</p>
+<h2 id="-3-">Анализ аналогичных решений по 3 критериям</h2>
+<table>
+    <thead>
+    <tr>
+        <th style="text-align:center">Критерий</th>
+        <th style="text-align:center">Музторг</th>
+        <th style="text-align:center">DYNATONE</th>
+        <th style="text-align:center">7 Нот</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td style="text-align:center">ассортимент</td>
+        <td style="text-align:center">+</td>
+        <td style="text-align:center">-</td>
+        <td style="text-align:center">+</td>
+    </tr>
+    <tr>
+        <td style="text-align:center">программа лояльности</td>
+        <td style="text-align:center">+</td>
+        <td style="text-align:center">+</td>
+        <td style="text-align:center">+</td>
+    </tr>
+    <tr>
+        <td style="text-align:center">доставка</td>
+        <td style="text-align:center">+</td>
+        <td style="text-align:center">+</td>
+        <td style="text-align:center">-</td>
+    </tr>
+    </tbody>
+</table>
+<h2 id="use-case-">Use-Case - диаграмма</h2>
+<p><img src="./docs/diagrams/useCase.svg" alt="Use-Case"></p>
+<h2 id="er-">ER-диаграмма сущностей</h2>
+<p><img src="./docs/diagrams/er.svg" alt="ER"></p>
+<h2 id="-">Пользовательские сценарии (в текстовом виде)</h2>
+<h3 id="-">Неавторизованный пользователь</h3>
+<ul>
+    <li>Войти/зарегистрироваться. Для этого нужно ввести логин и пароль.</li>
+    <li>Посмотреть информацию о конкретном товаре<h3 id="-">Клиент</h3>
+    </li>
+    <li>Выйти</li>
+    <li>Посмотреть личные данные</li>
+    <li>Добавить товар в корзину</li>
+    <li>Перейти в корзину. После перехода в корзину клиент может удалять товары из корзины, выбрать точку доставки или нажать на кнопку сделать заказ. </li>
+    <li>Посмотреть историю заказов<h3 id="-">Сотрудник</h3>
+    </li>
+    <li>Выйти</li>
+    <li>Посмотреть личные данные</li>
+    <li>Добавить товар в корзину</li>
+    <li>Перейти в корзину. После перехода в корзину сотрудник может удалять товары из корзины, выбрать точку доставки или нажать на кнопку оформить продажу.</li>
+    <li>Посмотреть историю продаж</li>
+    <li>Изменить статус заказа<h2 id="-bpmn-">Формализация бизнес-правил (в виде BPMN)</h2>
+    </li>
+    <li>Регистрация
+        <img src="./docs/diagrams/bpmn_auth.svg" alt="bpmn_auth"></li>
+    <li>Оформление заказа.
+        При оформлении заказа из его стоимости вычитается количество бонусов на карте пользователя, затем на оставшуюся сумму начисляется 5% бонусов.
+        <img src="./docs/diagrams/bpmn_order.svg" alt="bpmn_order"></li>
+</ul>
+<h2 id="-">Описание типа приложения и выбранного технологического стека</h2>
+<p>Тип приложения: Web SPA.</p>
+<p>Технологический стек:</p>
+<ol>
+    <li>Backend:</li>
+    <li>Java</li>
+    <li>Spring Framework</li>
+    <li>Frontend:</li>
+    <li>REACT</li>
+    <li>База данных:</li>
+    <li>PostgreSQL</li>
+</ol>
+<h2 id="-">Верхнеуровневое разбиение на компоненты</h2>
+<p><img src="./docs/diagrams/components.png" alt=""></p>
+<h2 id="uml-">UML диаграмма классов компонента бизнес-логики и компонента доступа к данным</h2>
+<p><img src="./docs/diagrams/classes.png" alt=""></p>
+<h2 id="-web-">Экраны будущего web-приложения на уровне черновых эскизов</h2>
+<h3 id="-">Авторизация</h3>
+<p><img src="./docs/diagrams/reg.png" alt=""></p>
+<h3 id="-">Домашняя страница</h3>
+<p><img src="./docs/diagrams/a2.jpg" alt=""></p>
+<h3 id="-">Информация о пользователе</h3>
+<p><img src="./docs/diagrams/user.png" alt=""></p>
+<h3 id="-">Информация о товаре</h3>
+<p><img src="./docs/diagrams/product.png" alt=""></p>
+<h3 id="-">Корзина</h3>
+<p><img src="./docs/diagrams/cart.png" alt=""></p>
+<h3 id="-">История заказов</h3>
+<p><img src="./docs/diagrams/orders.png" alt=""></p>

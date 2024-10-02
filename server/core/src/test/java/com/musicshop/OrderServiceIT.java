@@ -8,7 +8,7 @@ import com.musicshop.mapper.CartItemMapper;
 import com.musicshop.mapper.CartItemMapperImpl;
 import com.musicshop.repo.CartItemRepo;
 import com.musicshop.repo.UserRepo;
-import com.musicshop.service.OrderService;
+import com.musicshop.service.OrderServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -29,9 +29,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Sql(scripts = "classpath:db/cart.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "classpath:db/pickup_points.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "classpath:db/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-@Import({OrderService.class, CartItemMapperImpl.class})
+@Import({OrderServiceImpl.class, CartItemMapperImpl.class})
 public class OrderServiceIT extends DataJpaIT {
-    private final OrderService orderService;
+    private final OrderServiceImpl orderService;
     private final CartItemMapper cartItemMapper;
     private final CartItemRepo cartItemRepo;
     private final UserRepo userRepo;
@@ -39,7 +39,7 @@ public class OrderServiceIT extends DataJpaIT {
     private final TestEntityManager testEntityManager;
 
     @Autowired
-    public OrderServiceIT(OrderService orderService, CartItemMapper cartItemMapper, CartItemRepo cartItemRepo,
+    public OrderServiceIT(OrderServiceImpl orderService, CartItemMapper cartItemMapper, CartItemRepo cartItemRepo,
                           UserRepo userRepo, JdbcTemplate jdbcTemplate, TestEntityManager testEntityManager) {
         this.orderService = orderService;
         this.cartItemMapper = cartItemMapper;

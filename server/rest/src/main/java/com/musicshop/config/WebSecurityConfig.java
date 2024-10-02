@@ -41,7 +41,7 @@ public class WebSecurityConfig {
         this.userDetailsService = userDetailsService;
         this.apiPrefix = "/" + apiVersion;
         this.apiVersion = apiVersion;
-        publicUrls = Stream.of("/swagger-ui/**", "/api-docs", "/products", "/products/*", "/categories")
+        publicUrls = Stream.of("/swagger-ui/**", "/api-docs", "/api-docs/swagger-config", "/products", "/products/*", "/categories")
                 .map(s -> (apiPrefix + s)).toList()
                 .toArray(new String[0]);
     }
@@ -55,6 +55,14 @@ public class WebSecurityConfig {
                             .anonymous()
                         .requestMatchers(HttpMethod.GET, publicUrls)
                             .permitAll()
+                        .requestMatchers(HttpMethod.GET, new String[]{
+                                "/v3/api-docs/*",
+                                "/v3/api-docs",
+                                "/swagger-ui/**",
+                                "/api-docs",
+                                "/api-docs/swagger-config"}
+                        )
+                        .permitAll()
                         .requestMatchers(HttpMethod.PATCH, apiPrefix + "/orders/*")
                             .hasAuthority("EMPLOYEE")
                         .anyRequest()

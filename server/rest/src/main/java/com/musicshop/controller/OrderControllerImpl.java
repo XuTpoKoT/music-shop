@@ -80,7 +80,11 @@ public class OrderControllerImpl implements OrderController {
         AppUser customer = appUser;
         Integer employeeId = null;
         if (appUser.getRole() == AppUser.Role.EMPLOYEE) {
-            try {
+            log.info("customer id " + makeOrderRequest.customerId());
+            if (makeOrderRequest.customerId() == null) {
+                customer = null;
+            } else try {
+                log.info("find customer with id " + makeOrderRequest.customerId());
                 customer = userService.findById(makeOrderRequest.customerId());
             } catch (EntityNotFoundException e) {
                 customer = null;

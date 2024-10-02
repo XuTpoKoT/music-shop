@@ -10,6 +10,23 @@ services:
       - ms_data:/var/lib/postgresql/data
     ports:
       - "${DB_PORT}:5432"
+    networks:
+      - ms_net
+  pgadmin:
+    container_name: ms_pgadmin
+    image: dpage/pgadmin4:latest
+    depends_on:
+      - postgres
+    ports:
+      - "8081:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+      PGADMIN_LISTEN_ADDRESS: 0.0.0.0
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - ms_net
   mpa:
     container_name: ms_mpa
     depends_on:
@@ -26,6 +43,8 @@ services:
       DB_PORT: 5432
       DB_URL: "jdbc:postgresql://postgres:5432/${POSTGRES_DB}"
       API_PORT: ${MPA_PORT}
+    networks:
+      - ms_net
   rest:
     container_name: ms_rest
     depends_on:
@@ -42,6 +61,12 @@ services:
       DB_URL: "jdbc:postgresql://postgres:5432/${POSTGRES_DB}"
       API_PORT: ${REST_PORT}
       SIGNING_KEY: ${SIGNING_KEY}
+    networks:
+      - ms_net
 volumes:
   ms_data:
+  pgadmin-data:
+networks:
+  ms_net:
+    name: ms_net
 

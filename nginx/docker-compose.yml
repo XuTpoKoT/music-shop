@@ -1,0 +1,20 @@
+services:
+  nginx:
+    container_name: web_nginx
+    build: .
+    volumes:
+      - ./var/log/nginx:/var/log/nginx #log файлы.
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro #Конфигурация nginx.
+      - ./sites-enabled:/etc/nginx/sites-enabled:ro #Конфигурация площадок.
+      - ./ssl:/etc/nginx/ssl:ro #сертификаты
+      - ./static:/static
+    ports:
+      - "2222:85"
+    networks:
+      - ms_net
+networks:
+  ms_net:
+    name: ms_net
+    external: true
+
+
