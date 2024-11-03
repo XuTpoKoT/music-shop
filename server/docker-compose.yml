@@ -12,6 +12,19 @@ services:
       - "${DB_PORT}:5432"
     networks:
       - ms_net
+  rep_postgres:
+    image: postgres:15.5
+    container_name: rep_postgres
+    environment:
+      POSTGRES_DB: rep_postgres
+      POSTGRES_USER: rep_user
+      POSTGRES_PASSWORD: 234
+    volumes:
+      - rep_postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+    networks:
+      - ms_net
   pgadmin:
     container_name: ms_pgadmin
     image: dpage/pgadmin4:latest
@@ -66,6 +79,7 @@ services:
 volumes:
   ms_data:
   pgadmin-data:
+  rep_postgres_data:
 networks:
   ms_net:
     name: ms_net

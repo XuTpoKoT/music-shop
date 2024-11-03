@@ -8,6 +8,8 @@ services:
       - ./sites-enabled:/etc/nginx/sites-enabled:ro #Конфигурация площадок.
       - ./ssl:/etc/nginx/ssl:ro #сертификаты
       - ./static:/static
+      - ./cache:/data/nginx/cache
+      - ./modules:/etc/nginx/modules
     ports:
       - "2222:85"
     networks:
