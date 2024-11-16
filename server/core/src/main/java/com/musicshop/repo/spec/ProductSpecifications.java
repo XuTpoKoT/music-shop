@@ -12,7 +12,7 @@ public class ProductSpecifications {
             if (prefix == null || prefix.isEmpty()) {
                 return cb.conjunction();
             }
-            return cb.like(root.get("name"), prefix + "%");
+            return cb.like(cb.lower(root.get("name")), prefix.toLowerCase() + "%");
         };
     }
 

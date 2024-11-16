@@ -1,0 +1,35 @@
+Server Software:        nginx/1.27.1
+Server Hostname:        localhost
+Server Port:            2222
+
+Document Path:          /api/v2/products?pageNumber=4
+Document Length:        5248 bytes
+
+Concurrency Level:      200
+Time taken for tests:   5.583 seconds
+Complete requests:      10000
+Failed requests:        0
+Total transferred:      56340000 bytes
+HTML transferred:       52480000 bytes
+Requests per second:    1791.00 [#/sec] (mean)
+Time per request:       111.670 [ms] (mean)
+Time per request:       0.558 [ms] (mean, across all concurrent requests)
+Transfer rate:          9853.97 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    1   1.0      0      11
+Processing:     7  110 133.3     22    1153
+Waiting:        4  110 133.3     22    1153
+Total:          8  111 133.3     23    1153
+
+Percentage of the requests served within a certain time (ms)
+  50%     23
+  66%    182
+  75%    198
+  80%    213
+  90%    241
+  95%    400
+  98%    445
+  99%    562
+ 100%   1153 (longest request)

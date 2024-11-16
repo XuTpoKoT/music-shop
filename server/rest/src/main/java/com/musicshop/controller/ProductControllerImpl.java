@@ -33,6 +33,7 @@ public class ProductControllerImpl implements ProductController {
             @RequestParam(name = "productPrefix", required = false) String productPrefix) {
         Page<Product> productPage = productService.findAll(PageRequest.of(
                 pageNumber - 1, pageSize), categoryId, productPrefix);
+        log.info(productPage.getContent().toString());
         return productMapper.productPageToDto(productPage);
     }
 

@@ -1,0 +1,35 @@
+Server Hostname:        localhost
+Server Port:            2222
+
+Document Path:          /api/v2/products?pageNumber=4
+Document Length:        5248 bytes
+
+Concurrency Level:      500
+Time taken for tests:   1.769 seconds
+Complete requests:      10000
+Failed requests:        7050
+   (Connect: 0, Receive: 0, Length: 7050, Exceptions: 0)
+Total transferred:      16620300 bytes
+HTML transferred:       15481600 bytes
+Requests per second:    5653.09 [#/sec] (mean)
+Time per request:       88.447 [ms] (mean)
+Time per request:       0.177 [ms] (mean, across all concurrent requests)
+Transfer rate:          9175.40 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0   25   6.8     26      43
+Processing:     9   60  79.0     30     926
+Waiting:        0   37  83.3      0     914
+Total:         31   85  78.7     57     945
+
+Percentage of the requests served within a certain time (ms)
+  50%     57
+  66%     65
+  75%     79
+  80%     89
+  90%    200
+  95%    255
+  98%    388
+  99%    425
+ 100%    945 (longest request)
