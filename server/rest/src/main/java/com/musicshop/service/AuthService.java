@@ -28,7 +28,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public JwtAuthenticationResponse signUp(SignUpRequest req) {
+    public String signUp(SignUpRequest req) {
         try {
             if (!isPasswordStrong(req.password())) {
                 throw new WeakPasswordException("Слабый пароль!");
@@ -42,7 +42,7 @@ public class AuthService {
         }
     }
 
-    public JwtAuthenticationResponse signIn(SignInRequest request) {
+    public String signIn(SignInRequest request) {
         log.info("Sign in called with login " + request.login());
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 request.login(),
@@ -53,15 +53,14 @@ public class AuthService {
         return generateToken(appUser);
     }
 
-    private JwtAuthenticationResponse generateToken(AppUser appUser) {
+    private String generateToken(AppUser appUser) {
         SecurityUser securityUser = new SecurityUser(appUser);
         Map<String, Object> claims = Map.of(
                 "username", appUser.getUsername(),
                 "role", appUser.getRole()
         );
         log.info("Start gen token");
-        String jwt = jwtService.generateToken(securityUser, claims);
-        return new JwtAuthenticationResponse(jwt);
+        return jwtService.generateToken(securityUser, claims);
     }
 
     private boolean isPasswordStrong(String password) {

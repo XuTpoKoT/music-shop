@@ -3,6 +3,7 @@ package com.musicshop.controller;
 import com.musicshop.dto.request.AddProductToCartRequest;
 import com.musicshop.dto.request.UpdateCartItemRequest;
 import com.musicshop.dto.response.CartItemResponse;
+import com.musicshop.entity.CartItem;
 import com.musicshop.error.ErrorDescription;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -46,7 +47,9 @@ public interface CartController {
     @Operation(summary = "Добавление товара")
     @ApiResponses({
             @ApiResponse(
-                    responseCode = "201"),
+                    responseCode = "201",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CartItemResponse.class))}),
             @ApiResponse(
                     responseCode = "400",
                     content = {@Content(mediaType = "application/json",
@@ -70,7 +73,7 @@ public interface CartController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    void addProductToCart(@PathVariable String login, @RequestBody AddProductToCartRequest request);
+    CartItemResponse addProductToCart(@PathVariable String login, @RequestBody AddProductToCartRequest request);
 
     @Operation(summary = "Удаление товара")
     @ApiResponses({
@@ -103,7 +106,9 @@ public interface CartController {
     @Operation(summary = "Изменение количества товара")
     @ApiResponses({
             @ApiResponse(
-                    responseCode = "200"),
+                    responseCode = "200",
+                    content = {@Content(mediaType = "application/json",
+                    schema = @Schema(implementation = CartItemResponse.class))}),
             @ApiResponse(
                     responseCode = "400",
                     content = {@Content(mediaType = "application/json",
@@ -126,6 +131,6 @@ public interface CartController {
                             schema = @Schema(implementation = ErrorDescription.class))})
     })
     @PatchMapping("/{cartItemId}")
-    void updateProductInCart(@PathVariable String login, @PathVariable UUID cartItemId,
+    CartItemResponse updateProductInCart(@PathVariable String login, @PathVariable UUID cartItemId,
                              @RequestBody UpdateCartItemRequest request);
 }

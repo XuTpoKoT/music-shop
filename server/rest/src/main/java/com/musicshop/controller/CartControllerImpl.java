@@ -42,13 +42,14 @@ public class CartControllerImpl implements CartController {
     }
 
     @PreAuthorize("#login == authentication.name")
-    public void addProductToCart(@PathVariable String login, @Valid @RequestBody AddProductToCartRequest request) {
+    public CartItemResponse addProductToCart(@PathVariable String login, @Valid @RequestBody AddProductToCartRequest request) {
         UUID productId = request.productId();
         log.info("addProductToCart called with login " + login + " and product " + productId);
         SecurityUser securityUser = SecurityUtils.getSecurityUser();
         AppUser appUser = securityUser.getAppUser();
         Product product = productService.findById(productId);
-        cartService.saveOnConflictIgnore(new CartItem(appUser.getId(), product, 1));
+        return cartItemMapper.cartItemToDto(cartService.saveOnConflictUpdate(
+                new CartItem(appUser.getId(), product, 1)));
     }
 
     @PreAuthorize("#login == authentication.name")
@@ -58,10 +59,10 @@ public class CartControllerImpl implements CartController {
     }
 
     @PreAuthorize("#login == authentication.name")
-    public void updateProductInCart(@PathVariable String login,
+    public CartItemResponse updateProductInCart(@PathVariable String login,
                                     @PathVariable UUID cartItemId,
                                     @Valid @RequestBody UpdateCartItemRequest request) {
         log.info("updateProductInCart called with login " + login + " and cartItemId " + cartItemId);
-        cartService.updateCartItem(cartItemId, request.count());
+        return cartItemMapper.cartItemToDto(cartService.updateCartItem(cartItemId, request.count()));
     }
 }

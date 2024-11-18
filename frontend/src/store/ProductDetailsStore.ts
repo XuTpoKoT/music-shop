@@ -1,34 +1,39 @@
-import { ErrorResponse } from "../http";
-import { ProductResponse } from "../service/response/ProductResponse";
-import {create} from 'zustand';
-import {persist} from "zustand/middleware";
-import ProductService from '../service/ProductService';
-import { AxiosError } from 'axios';
+import { AxiosError } from "axios";
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import ProductsApi from "../api/ProductsApi";
+import { ProductResponse, ProductResponseSchema } from "../dto/ProductResponse";
+import { ErrorResponse, RequestStatus } from "../dto/RequestState";
+import { useErrorStore } from "./ErrorStore";
+import { getServerErrorMessage } from "@/api";
 
 interface ProductDetailsState {
-    productDetails: RequestState<ProductResponse>;
+    status: RequestStatus;
+    productDetails: ProductResponse | null;
     fetchProductDetails: (productId: string) => void;
 }
 
 const useProductDetailsStore = create<ProductDetailsState>()(
     persist(
         (set, get) => ({
-            productDetails: { status: 'idle', data: null, errorMessage: null },
+            status: RequestStatus.Idle,
+            productDetails: null,
             fetchProductDetails: async (productId) => {
-                set({productDetails: { status: 'loading', data: null, errorMessage: null }})
+                set({status: RequestStatus.Loading})
                 try {
-                    const response = await ProductService.getProductById(productId);
-                    set({ productDetails: { status: 'success', data: response, errorMessage: null } });
+                    const response = await ProductsApi.getProductById(productId);
+                    const validatedResponse = ProductResponseSchema.parse(response)
+                    set({status: RequestStatus.Success, productDetails: validatedResponse})
                 } catch (e) {                    
-                    const errorResponse = (e as AxiosError)?.response?.data as ErrorResponse;
-                    const errMsg = 'Error: ' + (errorResponse.message ?? 'connection failed')
+                    const errMsg = getServerErrorMessage(e)
                     console.log(errMsg)
-                    set({ productDetails: { status: 'error', data: null, errorMessage: errMsg } });
+                    set({status: RequestStatus.Error, productDetails: null})
+                    useErrorStore.setState({errorMessage: errMsg})
                 }
             },
         }),
         {
-            name: 'product-storage',
+            name: 'product-details-storage',
             getStorage: () => sessionStorage,
         }
     )

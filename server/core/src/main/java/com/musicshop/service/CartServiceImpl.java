@@ -20,8 +20,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void saveOnConflictIgnore(CartItem cartItem) {
-        cartItemRepo.saveOnConflictIgnore(cartItem);
+    public CartItem saveOnConflictUpdate(CartItem cartItem) {
+        return cartItemRepo.saveOnConflictUpdate(cartItem);
     }
 
     @Override
@@ -30,10 +30,10 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void updateCartItem(UUID cartItemId, Integer count) {
+    public CartItem updateCartItem(UUID cartItemId, Integer count) {
         CartItem cartItem = cartItemRepo.findById(cartItemId)
                 .orElseThrow(() -> new EntityNotFoundException("CartItem " + cartItemId + " not found"));
         cartItem.setCount(count);
-        cartItemRepo.save(cartItem);
+        return cartItemRepo.save(cartItem);
     }
 }

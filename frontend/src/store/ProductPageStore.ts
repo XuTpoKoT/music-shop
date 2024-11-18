@@ -1,12 +1,14 @@
-import {create} from 'zustand';
-import {persist} from "zustand/middleware";
-import ProductService from '../service/ProductService';
-import { ProductPageResponse } from '../service/response/ProductPageResponse';
-import { AxiosError } from 'axios';
-import { ErrorResponse } from '../http';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import ProductsApi from "../api/ProductsApi";
+import { ProductPageResponse, ProductPageResponseSchema } from "@/dto/ProductPageResponse";
+import { RequestStatus } from "../dto/RequestState";
+import { useErrorStore } from "./ErrorStore";
+import { getServerErrorMessage } from "@/api";
 
 interface ProductPageState {
-    productPage: RequestState<ProductPageResponse>;
+    status: RequestStatus;
+    productPage: ProductPageResponse | null;
     selectedPage: number;
     productPrefix: string;
     setSelectedPage: (pageNumber: number) => void;
@@ -17,21 +19,23 @@ interface ProductPageState {
 const useProductPageStore = create<ProductPageState>()(
     persist(
         (set, get) => ({
-            productPage: { status: 'idle', data: null, errorMessage: null },
+            status: RequestStatus.Idle,
+            productPage: null,
             selectedPage: 1,
             productPrefix: '',
             setSelectedPage: (pageNumber) => set({ selectedPage: pageNumber }),
             setProductPrefix: (newProductPrefix) => set({ productPrefix: newProductPrefix }),
             fetchProductPage: async (categoryId) => {
-                set({productPage: { status: 'loading', data: null, errorMessage: null }})
+                set({status: RequestStatus.Loading})
                 try {
-                    const response = await ProductService.getProductPage(categoryId, get().selectedPage, get().productPrefix)
-                    set({ productPage: { status: 'success', data: response, errorMessage: null } });
-                } catch (e) {                    
-                    const errorResponse = (e as AxiosError)?.response?.data as ErrorResponse;
-                    const errMsg = 'Error: ' + (errorResponse?.message ?? 'connection failed')
+                    const response = await ProductsApi.getProducts(categoryId, get().selectedPage, get().productPrefix)
+                    const validatedResponse = ProductPageResponseSchema.parse(response)
+                    set({ status: RequestStatus.Success, productPage: validatedResponse });
+                } catch (e) {
+                    const errMsg = getServerErrorMessage(e)
                     console.log(errMsg)
-                    set({ productPage: { status: 'error', data: null, errorMessage: errMsg } });
+                    set({ status: RequestStatus.Error, productPage: null });
+                    useErrorStore.setState({errorMessage: errMsg})
                 }
             },
         }),

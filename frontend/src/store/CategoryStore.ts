@@ -1,12 +1,15 @@
-import {create} from 'zustand';
-import {persist} from "zustand/middleware";
-import { CategoryResponse } from '../service/response/CategoryResponse';
-import CategoryService from '../service/CategoryService';
-import { AxiosError } from 'axios';
-import { ErrorResponse } from '../http';
+import { AxiosError } from "axios";
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import CategoriesApi from "../api/CategoriesApi";
+import { CategoryResponse } from "../dto/CategoryResponse";
+import { ErrorResponse, RequestStatus } from "../dto/RequestState";
+import { useErrorStore } from "./ErrorStore";
+
 
 interface CategoriesState {
-    categories: RequestState<CategoryResponse[]>;
+    status: RequestStatus;
+    categories: CategoryResponse[] | null;
     selectedCategoryId: string;
     setSelectedCategory: (categoryId: string) => void;
     fetchCategories: () => void;
@@ -15,19 +18,21 @@ interface CategoriesState {
 const useCategoryStore = create<CategoriesState>()(
     persist(
         (set, get) => ({
-            categories: { status: 'idle', data: null, errorMessage: null },
+            status: RequestStatus.Idle,
+            categories: null,
             selectedCategoryId: '',
             setSelectedCategory: (categoryId) => set({ selectedCategoryId: categoryId }),
             fetchCategories: async () => {
-                set({categories: { status: 'loading', data: null, errorMessage: null }})
+                set({status: RequestStatus.Loading})
                 try {
-                    const response = await CategoryService.getCategories()
-                    set({ categories: { status: 'success', data: response, errorMessage: null } });
+                    const response = await CategoriesApi.getCategories()
+                    set({ status: RequestStatus.Success, categories: response });
                 } catch (e) {
                     const errorResponse = (e as AxiosError)?.response?.data as ErrorResponse;
                     const errMsg = 'Error: ' + (errorResponse?.message ?? 'connection failed')
                     console.log(errMsg)
-                    set({ categories: { status: 'error', data: null, errorMessage: errMsg } });
+                    set({ status: RequestStatus.Error, categories: null });
+                    useErrorStore.setState({errorMessage: errMsg})
                 }
             },
         }),

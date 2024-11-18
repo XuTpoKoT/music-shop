@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface CartService {
     List<CartItem> findByUserId(Integer userId);
-    void saveOnConflictIgnore(CartItem cartItem);
+    CartItem saveOnConflictUpdate(CartItem cartItem);
     void deleteById(UUID cartItemId);
-    void updateCartItem(UUID cartItemId, Integer count);
+    CartItem updateCartItem(UUID cartItemId, Integer count);
 }

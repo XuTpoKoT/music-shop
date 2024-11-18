@@ -1,11 +1,10 @@
 import React from 'react';
-import SignInPage from "./page/SignInPage";
+import SignInPage from "./components/page/SignInPage";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import SignUpPage from "./page/SignUpPage";
+import SignUpPage from "./components/page/SignUpPage";
 import "bootstrap/dist/css/bootstrap.min.css";
-import ProductsPage from "./page/ProductsPage";
-import ProductDetailsPage from "./page/ProductDetailsPage";
-// import ProductDetailsPage from 
+import ProductsPage from "./components/page/ProductsPage";
+import ProductDetailsPage from "./components/page/ProductDetailsPage";
 
 const App = () => {
     console.log('Token:', localStorage.getItem('token'));

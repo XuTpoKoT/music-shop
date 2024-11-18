@@ -55,7 +55,7 @@ public class CartController {
         AppUser appUser = securityUser.getAppUser();
         Product product = productRepo.findById(productId).orElseThrow(() ->
                 new EntityNotFoundException("Product " + productId + " not found"));
-        cartItemRepo.saveOnConflictIgnore(new CartItem(appUser.getId(), product, 1));
+        cartItemRepo.saveOnConflictUpdate(new CartItem(appUser.getId(), product, 1));
 
         return "redirect:/v1/products";
     }
